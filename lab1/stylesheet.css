@@ -3,3 +3,9 @@
     border-width: 3px;
     border-color: red;
 }
+
+#message {
+    border-style: solid;
+    border-width: 3px;
+    border-color: red;
+}
