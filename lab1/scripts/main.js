@@ -9,7 +9,7 @@ function sendMessage(form){
   else{
     var parentnode = document.getElementById("messagelist");
     var melement = document.createElement('div');
-    melement.innerText =  message ;
+    melement.innerHTML = "<h1>" + message + "</h1>" + '<input type="checkbox" name="checkbox" >'
     parentnode.insertBefore(melement, parentnode.children[0]);
   }
 }
