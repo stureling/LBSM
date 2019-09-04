@@ -7,13 +7,9 @@ function sendMessage(form){
     console.log(message.length);
   }
   else{
-    console.log("Success, you typed:  " + message);
-    console.log(message.length);
-    messages.unshift(message);
-    messages.forEach(function(item, index, array){
-      console.log(item, index);
-    });
+    var parentnode = document.getElementById("messagelist");
+    var melement = document.createElement('div');
+    melement.innerText =  message ;
+    parentnode.insertBefore(melement, parentnode.children[0]);
   }
 }
-
-
