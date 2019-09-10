@@ -1,31 +1,37 @@
-var i = 0;
 
 function sendMessage(form){
   var message = form.inputbox.value;
+
   console.log(message.length);
+  
   if (message.length > 140 || message.length < 1){
-    console.log("Failure, you typed:  " + message);
-    console.log(message.length);
+    var error = document.createElement('p');
+    error.setAttribute('id', 'errormsg');
+    error.appendChild(document.createTextNode('Error: Too many characters. Max 140.'));
+
+    var errbtn = document.createElement('input');
+    errbtn.setAttribute('type', 'button');
+    errbtn.setAttribute('id', 'errbtn');
+    errbtn.setAttribute('value', 'OK');
+    errbtn.onclick = closeError;
+    error.appendChild(errbtn);
+    document.body.appendChild(error);
+
   }
   else{
     var parentnode = document.getElementById("messagelist");
-    var melement = document.createElement('div');
-    melement.setAttribute('id', 'message' + i);
-    melement.setAttribute('class', 'unchecked');
 
     var chbx = document.createElement('input');
     chbx.setAttribute('type', 'checkbox');
-    chbx.setAttribute('id', 'checkbox' + i);
-    chbx.setAttribute('value', message);
-    chbx.onclick = toggleCheck
+    chbx.setAttribute('class', 'checkbox');
+    chbx.onclick = toggleCheck;
     
     var textbox = document.createElement('p');
+    textbox.setAttribute('class', 'unchecked');
     textbox.appendChild(document.createTextNode(message));
-    melement.appendChild(textbox);
-    melement.appendChild(chbx);
+    textbox.appendChild(chbx);
     
-    parentnode.insertBefore(melement, parentnode.children[0]);
-    i += 1;
+    parentnode.insertBefore(textbox, parentnode.children[0]);
   }
 }
 
@@ -36,5 +42,9 @@ function toggleCheck(){
   else{
     this.parentElement.setAttribute('class', 'unchecked');
   }
+}
+
+function closeError(){
+  document.getElementById('errormsg').remove();
 }
 

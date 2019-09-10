@@ -5,27 +5,37 @@ body {
   margin-top: 5%;
 }
 
+p {
+  padding: 5px;
+  border-style: solid;
+  border-width: 2px;
+  border-color: black;
+  word-wrap: break-word;
+}
+
+#errbtn {
+  float: right;
+}
+#errormsg {
+  background-color: red;
+  position: fixed;
+  width: 50%;
+  left: 25%;
+  top: 10%;
+}
 
 #messagelist {
   text-align: center;
   padding: 5px;
 }
-#sendbutton {
-  margin: 5px;
-}
-#inputbox {
-  margin: 5px;
+
+.checkbox {
+  float: right;
 }
 
 .checked {
   background-color: white;
-  border-style: solid;
-  border-width: 2px;
-  border-color: black;
 }
 .unchecked {
   background-color: lightskyblue;
-  border-style: solid;
-  border-width: 2px;
-  border-color: black;
 }
