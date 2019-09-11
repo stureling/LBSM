@@ -12,16 +12,24 @@ p {
   border-color: black;
   word-wrap: break-word;
 }
+#sendbutton {
+  float: right;
+}
+#inputbox {
+  float: left;
+  width: 75%;
+}
 
 #errbtn {
   float: right;
 }
 #errormsg {
   background-color: red;
+  padding: 10px;
   position: fixed;
   width: 50%;
   left: 25%;
-  top: 10%;
+  top: 50%;
 }
 
 #messagelist {

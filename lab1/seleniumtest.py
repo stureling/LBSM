@@ -1,4 +1,5 @@
 import selenium
+from pprint import pprint
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
@@ -33,17 +34,31 @@ class Lab1Tests(unittest.TestCase):
     def test_send_message(self):
         browser = self.browser
         message1 = "Testmeddelande1"
-        message2 = "Testmeddelande 2"
+        message2 = "Testmeddelande2"
 
         inputbox = browser.find_element_by_id('inputbox')
         inputbox.send_keys(message1)
         sendbutton = browser.find_element_by_id('sendbutton')
         sendbutton.click()
+        inputbox.clear()
+        inputbox.send_keys(message2)
+        sendbutton.click()
 
-        messagelist = browser.find_element_by_id('messagelist')
+        messagelist = browser.find_elements_by_class_name('unchecked')
+
+        
+        assert message2 == messagelist[0].text
+
 
         assert message1 in browser.page_source
 
+
+        checkbox = browser.find_element_by_class_name('checkbox')
+        checkbox.click()
+
+        browser.refresh()
+
+        assert message1 not in browser.page_source
 
     def tearDown(self):
         self.browser.close()
