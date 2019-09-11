@@ -7,7 +7,7 @@ function sendMessage(form){
   if (message.length > 140 || message.length < 1){
     var error = document.createElement('p');
     error.setAttribute('id', 'errormsg');
-    error.appendChild(document.createTextNode('Error: Too many characters. Max 140.'));
+    error.appendChild(document.createTextNode('Error: Too many or too few characters. Max 140.'));
 
     var errbtn = document.createElement('input');
     errbtn.setAttribute('type', 'button');
