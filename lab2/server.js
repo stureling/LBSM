@@ -6,38 +6,38 @@ const assert = require('assert');
 
 var testMessage = {"message":["test", false]};
 
-MongoClient.connect('mongodb://localhost:27017', {useNewUrlParser:true, useUnifiedTopology:true}, function (err, client) {
+MongoClient.connect('mongodb://localhost:27017/tdp013', {useNewUrlParser:true, useUnifiedTopology:true}, function (err, client) {
   if (err) throw err;
 
-  var db = client.db('tdp013');
-
   // Clear database
-  db.collection('messages').deleteMany();
+  client.collection('messages').deleteMany();
 
   // Insert testMessage into database
-  db.collection('messages').insertOne(testMessage);
+  client.collection('messages').insertOne(testMessage);
   // Print database
-  db.collection('messages').find().toArray(function (err, result) {
+  client.collection('messages').find().toArray(function (err, result) {
     if (err) throw err;
 
     console.log(result)
   });
+  client.close();
 });
 
 // res nedanför är den funktionen som ska kallas när routen anropas
 // Visa alla meddelanden
 app.get('/', function (req, res) {
-  MongoClient.connect('mongodb://localhost:27017', {useNewUrlParser:true, useUnifiedTopology:true}, function (err, client) {
+  MongoClient.connect('mongodb://localhost:27017/tdp013', {useNewUrlParser:true, useUnifiedTopology:true}, function (err, client) {
     if (err) throw err;
 
-    var db = client.db('tdp013');
-
-    db.collection('messages').find().toArray(function (err, result) {
+    client.collection('messages').find().toArray(function (err, result) {
       if (err) throw err;
 
-      res.send(result)});
+      res.send(result);
+    });
+    client.close();
   });
 });
+
 
 app.post('/', function (req, res) {
     res.send('')});
