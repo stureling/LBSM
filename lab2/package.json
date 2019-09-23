@@ -4,15 +4,17 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "mocha",
+    "test": "nyc mocha --timeout=300",
     "start": "node server.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
-    "istanbul": "^0.4.5",
     "mocha": "^6.2.0",
     "mongodb": "^3.3.2"
+  },
+  "devDependencies": {
+    "nyc": "^14.1.1"
   }
 }

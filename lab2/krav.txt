@@ -1,11 +1,11 @@
 
 [*]Installation av NPM, Node.js, Express, Mocha, istanbul och MongoDB
-[ ]Det skall finnas möjlighet att via ett HTTP anrop till den utvecklade Express.js applikationen spara ett nytt meddelande i MongoDB.
-[ ]Det skall finnas möjlighet att via ett HTTP anrop till den utvecklade Express.js applikationen markera ett meddelande som läst i MongoDB.
-[ ]Det skall finnas möjlighet att via ett HTTP anrop till den utvecklade E applikationen hämta alla meddelanden som har sparats i MongoDB (returneras som JSON).
+[*]Det skall finnas möjlighet att via ett HTTP anrop till den utvecklade Express.js applikationen spara ett nytt meddelande i MongoDB.
+[*]Det skall finnas möjlighet att via ett HTTP anrop till den utvecklade Express.js applikationen markera ett meddelande som läst i MongoDB.
+[*]Det skall finnas möjlighet att via ett HTTP anrop till den utvecklade E applikationen hämta alla meddelanden som har sparats i MongoDB (returneras som JSON).
 [ ]Alla funktioner skall testas med Mocha. Tänk på att använda istanbul så att ni får code-coverage rapporter.
-[ ]Om anropet inte mappar mot en funktion skall HTTP 404 returneras.
-[ ]Om anropet använder fel metod skall HTTP 405 returneras.
-[ ]Om anropet använder felaktiga eller saknar parameterar skall HTTP 400 returneras.
+[*]Om anropet inte mappar mot en funktion skall HTTP 404 returneras.
+[*]Om anropet använder fel metod skall HTTP 405 returneras.
+[*]Om anropet använder felaktiga eller saknar parameterar skall HTTP 400 returneras.
 [ ]Vid alla andra fel returneras HTTP 500.
-[ ]Alla anrop till Express.js skall ske enligt specifikation 1.
+[*]Alla anrop till Express.js skall ske enligt specifikation 1.
