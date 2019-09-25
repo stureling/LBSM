@@ -15,16 +15,12 @@ MongoClient.connect('mongodb://localhost:27017/tdp013', {useNewUrlParser:true, u
   client.close();
 });
 
-// res nedanför är den funktionen som ska kallas när routen anropas
-// Visa alla meddelanden
-
 app.all('*', function(req, res, next){
   if (req.method != "GET"){
     res.status(405).send("HTTP 405: Method not allowed")
   }else{
     next();
   }
-  //res.status(405).send("Method not allowed")
 })
 
 app.get('/getall', function (req, res) {
@@ -45,9 +41,7 @@ app.get('/getall', function (req, res) {
 
 app.get('/save', function (req, res) {
 
-  console.log("Saving message");
   var message = req.query.message;
-
   
   if (message == undefined){
     res.status(400).send("HTTP 400: Parameter invalid or missing")
@@ -69,8 +63,6 @@ app.get('/save', function (req, res) {
     res.send("Added message");
     }
 });
-
-
 
 app.get('/flag', function (req, res) {
   var id = req.query.id;
@@ -96,7 +88,6 @@ app.get('/flag', function (req, res) {
 });
 
 app.listen(port, () => console.log(`Express: App listening on port ${port}!`));
-
 
 app.use(function (err, req, res, next) {
   console.error(err.stack)

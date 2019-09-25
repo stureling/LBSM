@@ -7,5 +7,5 @@
 [*]Om anropet inte mappar mot en funktion skall HTTP 404 returneras.
 [*]Om anropet använder fel metod skall HTTP 405 returneras.
 [*]Om anropet använder felaktiga eller saknar parameterar skall HTTP 400 returneras.
-[ ]Vid alla andra fel returneras HTTP 500.
+[?]Vid alla andra fel returneras HTTP 500.
 [*]Alla anrop till Express.js skall ske enligt specifikation 1.
