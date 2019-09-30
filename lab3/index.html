@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Lab 3 </title>
+    <link href="stylesheet.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> 
+    <script src="client.js"></script>
+  </head>
+  <body>
+    <h2> LAB3 </h2>
+    <form name="message"  method="GET">
+      <input type="text" id="inputbox" name="inputbox" value="">
+      <input type="button" id="sendbutton" name="button" value="Send" onClick="sendMessage(this.form.inputbox.value)">
+    </form>
+    <br>
+    <div id="messagelist" ></div>
+  </body>
+</html>
