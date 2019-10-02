@@ -1,9 +1,13 @@
 const express = require('express');
 const app = express();
+const cors = require('cors');
 const port = 3000;
 var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectId;
 const assert = require('assert');
+
+app.use(cors());
+
 
 var testMessage = {"message":["test", false]};
 
@@ -41,6 +45,7 @@ app.get('/getall', function (req, res) {
 
 app.get('/save', function (req, res) {
 
+  console.log('saved message')
   var message = req.query.message;
   
   if (message == undefined){
