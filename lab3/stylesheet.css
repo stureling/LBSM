@@ -41,9 +41,10 @@ p {
   float: right;
 }
 
-.checked {
-  background-color: white;
+.read {
+  background-color:lightskyblue ;
 }
-.unchecked {
-  background-color: lightskyblue;
+.unread {
+  background-color:white ;
+  
 }
