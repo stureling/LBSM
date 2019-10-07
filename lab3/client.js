@@ -6,6 +6,7 @@ function sendMessage(message){
 		console.log(data);
 		console.log(status);
 		displayMessages();
+
 	}).fail( 
 	function(res){
 		console.log(res["responseText"]);
@@ -17,27 +18,29 @@ function sendMessage(message){
 function displayMessages(){
 	var url = "http://localhost:3000/getall"; 
 	var parentnode = document.getElementById("messagelist");
-	parentnode.innerHTML = "";
 
 
 	$.get(url, function(data, status){
 		console.log(data);
 		console.log(status);
-		for(message in data){
-			console.log(data[message]["message"]);
+		for (message in data){
 			var id = data[message]["_id"];
-			var textbox = document.createElement('p');
-			textbox.setAttribute('id', id);
-			textbox.onclick = function(){
-				setRead(this.id);
+			
+			if (document.getElementById(id) == undefined){
+				console.log(data[message]["message"]);
+				var textbox = document.createElement('p');
+				textbox.setAttribute('id', id);
+				textbox.onclick = function(){
+					setRead(this.id);
+				}
+				if (data[message]["flag"] == true){
+					textbox.setAttribute('class', 'read');
+				}else{
+					textbox.setAttribute('class', 'unread');
+				}
+				textbox.appendChild(document.createTextNode(data[message]["message"]));
+				parentnode.insertBefore(textbox, parentnode.children[0]);
 			}
-			if (data[message]["flag"] == true){
-				textbox.setAttribute('class', 'read');
-			}else{
-				textbox.setAttribute('class', 'unread');
-			}
-			textbox.appendChild(document.createTextNode(data[message]["message"]));
-			parentnode.insertBefore(textbox, parentnode.children[0]);
 		}
 	});	
 }
@@ -72,9 +75,6 @@ function setRead(id){
 	});	
 }
 
-
 function closeError(){
 	document.getElementById('errormsg').remove();
 }
-
-displayMessages();

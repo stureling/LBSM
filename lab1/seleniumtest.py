@@ -44,7 +44,7 @@ class Lab1Tests(unittest.TestCase):
         inputbox.send_keys(message2)
         sendbutton.click()
 
-        messagelist = browser.find_elements_by_class_name('unchecked')
+        messagelist = browser.find_elements_by_class_name('unread')
 
         
         assert message2 == messagelist[0].text
@@ -53,7 +53,7 @@ class Lab1Tests(unittest.TestCase):
         assert message1 in browser.page_source
 
 
-        checkbox = browser.find_element_by_class_name('checkbox')
+        checkbox = browser.find_element_by_class_name('message')
         checkbox.click()
 
         browser.refresh()
