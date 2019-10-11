@@ -3,7 +3,7 @@ var MongoClient = require('mongodb').MongoClient;
 var post = require('request');
 var assert = require('assert');
 var should = require('should');
-var file = require('./server');
+require('./server');
 
 var url = 'http://localhost:3000'
 
