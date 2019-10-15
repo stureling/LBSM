@@ -52,10 +52,13 @@ app.use(express.urlencoded());
 app.param('username', function (req, res, next, user) {
   // ... Perform database query and
   // ... Store the user object from the database in the req object
-    console.log(user)
     User.findOne({username: user}, function(err, userObject){
+        if(!userObject){ 
+            res.status(404).send("User not found");
+        }else{
         req.user = userObject;
         return next();
+        }
     });
 });
 
@@ -69,11 +72,10 @@ app.all('*', function(req, res, next){
 
 app.get('/user/:username', function(req, res){
 //specific users page
-    User.findOne({session : req.signedCookies.session }, function(err, user){
+    User.findOne({sessions : req.signedCookies.accessToken }, function(err, user){
         if(!user){
             res.status(401).send("HTTP 401: Unauthorized, please log in");
         }else{
-            console.log("please wörk")
             res.status(200).send("page of user " + req.user.username)
         }
     });
@@ -81,7 +83,10 @@ app.get('/user/:username', function(req, res){
 
 app.get('/user/:username/friends', function(req, res){
 //specific users friendlist
-
+    User.findOne( { username: req.user.username }, function(err, user){
+    
+        res.send(user.friends)
+    });
 });
 
 app.get('/user/:username/addfriend', function(req, res){
@@ -99,9 +104,17 @@ app.get('/user/:username/removefriend', function(req, res){
 
 app.get('/home', function(req, res){
 //test page
-    res.cookie('testcookie', 'session', options)
-    console.log(req.signedCookies.testcookie)
     res.send("Welcome to the home page!")
+});
+
+app.get('/unauthourize', function(req, res){
+//test page
+    User.findOneAndUpdate( { sessions: req.signedCookies.accessToken }, 
+        { $set:{ sessions: [req.signedCookies.accessToken]}}, 
+        function(err, user){
+
+        res.send("Logged out all other sessions")
+    });
 });
 
 app.get('/login', function(req, res){
@@ -127,15 +140,12 @@ app.post('/login', function(req, res){
                     signed: true // Indicates if the cookie should be signed
                 }
                 var d = new Date();
-                res.cookie('session', user.username + d.getTime(), options);
-                res.cookie('access-token', user.username, options);
-                console.log(res.locals);
-                res.cookie('access-token', user.username, options);
-                /*
-                User.findOneAndUpdate({ username: user.username }, { $push: { session: res.signedCookies.session }},function(err, result){
+                var currentTime = d.getTime();
+                res.cookie('accessToken', user.username + currentTime, options);
+                User.findOneAndUpdate({ username: user.username }, { $push: { sessions: user.username + currentTime }}, {findOneAndModify: true },function(err, result){
                     if (err) throw err;
+                    console.log(result)
                 });
-                */
                 res.send("Logged in");
             }else{
                 res.send("Invalid password");
