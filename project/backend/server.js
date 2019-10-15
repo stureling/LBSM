@@ -84,17 +84,22 @@ app.get('/user/:username', function(req, res){
 app.get('/user/:username/friends', function(req, res){
 //specific users friendlist
     User.findOne( { username: req.user.username }, function(err, user){
-    
         res.send(user.friends)
     });
 });
 
 app.get('/user/:username/addfriend', function(req, res){
 //add user to friendlist
-    var currentUser = req.user;
-    var friend = req.params.username
-    res.status(200).send("friendlist for " + req.params.username)
-
+    var friend = req.user.username
+    User.findOneAndUpdate({sessions : req.signedCookies.accessToken }, 
+        {$push: {friends: friend}}, 
+        function(err, user){
+            if(!user){
+                res.status(401).send("HTTP 401: Unauthorized, please log in");
+            }else{
+                res.send(friend," added to friends")
+            }
+    });
 });
 
 app.get('/user/:username/removefriend', function(req, res){
@@ -124,12 +129,11 @@ app.get('/login', function(req, res){
 
 app.post('/login', function(req, res){
     //login
-    console.log(req.body);
+    console.log("request body: ",req.body);
     User.findOne({username : req.body.username }, function(err, user){
         if (err) throw err;
 
         if (user != null){
-            console.log(user)
             //The hashing step could be moved to frontend for extra security
             //bcrypt.compare(req.body.password, user.password, function(err, result){
             //
@@ -141,8 +145,10 @@ app.post('/login', function(req, res){
                 }
                 var d = new Date();
                 var currentTime = d.getTime();
-                res.cookie('accessToken', user.username + currentTime, options);
-                User.findOneAndUpdate({ username: user.username }, { $push: { sessions: user.username + currentTime }}, {findOneAndModify: true },function(err, result){
+                cookieValue = user.username + ' ' + currentTime;
+                console.log("new session: ", cookieValue);
+                res.cookie('accessToken', cookieValue, options);
+                User.findOneAndUpdate({ username: user.username }, { $push: { sessions: cookieValue }}, {useFindAndModify: false },function(err, result){
                     if (err) throw err;
                     console.log(result)
                 });
