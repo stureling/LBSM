@@ -1,103 +1,52 @@
 <template>
-    <div id="app" class="small-container">
-        <h1>Employees</h1>
-
-        <employee-form @add:employee="addEmployee" />
-        <employee-table 
-            v-bind:employees="employees" 
-            @delete:employee="deleteEmployee" 
-            @edit:employee="editEmployee"
-        />
+    <div id="app">
+        <div id="nav">
+            <router-link v-if="authenticated" to="/login" v-on:click.native="logout()" replace>Logout</router-link>
+        </div>
+        <router-view @authenticated="setAuthenticated" />
     </div>
 </template>
 
 <script>
-import EmployeeTable from '@/components/EmployeeTable.vue'
-import EmployeeForm from '@/components/EmployeeForm.vue'
 
 export default {
     name: 'app',
-    components: {
-        EmployeeTable,
-        EmployeeForm,
-    },
+
     data() {
         return {
-            employees: [],
+            authenticated: false,
+            mockAccount: {
+                username: "nraboy",
+                password: "password"
+            }
         }
     },
     mounted() {
-        this.getEmployees()
+        if(!this.authenticated) {
+            this.$router.replace({ name: "login" });
+        }
     },
-
     methods: {
-        async getEmployees() {
-            try {
-                const response = await fetch('https://jsonplaceholder.typicode.com/users')
-                const data = await response.json()
-                this.employees = data
-            }   catch(error) {
-                console.error(error)
-            }
+        setAuthenticated(status) {
+            this.authenticated = status;
         },
-
-        async addEmployee(employee) {
-            try {
-                const response = await fetch('https://jsonplaceholder.typicode.com/users', 
-                {
-                    method: 'POST',
-                    body: JSON.stringify(employee),
-                    headers: {'Conent-type': 'application/json; charset=UTF-8' },
-                })
-                const data = await response.json()
-                this.employees = [...this.employees, data]
-            }   catch (error) {
-                console.error(error)
-            }
-        },
-
-        async editEmployee(id, updatedEmpolyee) {
-            try {
-                const response = await fetch('https://jsonplaceholder.typicode.com/users/${id}', 
-                {
-                    method: 'PUT',
-                    body: JSON.stringify(updatedEmpolyee),
-                    headers: {'Content-type': 'application/json; charset=UTF-8' },
-                })
-                const data = await response.json()
-                this.employees = this.employees.map(employee => (employee.id === id ? 
-                    data : employee))
-            }   catch (error) {
-                console.error(error)
-            }
-        }, 
-        async deleteEmployee(id) {
-            try {
-                await fetch('https://jsonplaceholder.typicode.com/users/${id}',
-                {
-                    method: 'DELETE'
-                })
-                this.employees = this.employees.filter(employee => employee.id !== id)
-            } catch (error) {
-                console.error(error);
-            }
-        },
+        logout() {
+            this.authenticated = false;
+        }
     }
 }
 </script>
 
 <style>
-button {
-  background: #009435;
-  border: 1px solid #009435;
-}
-button:hover,
-button:active,
-button:focus {
-  background: #32a95d;
-  border: 1px solid #32a95d;
-}
-.small-container {
-  max-width: 680px;
-}
+    body {
+        background-color: #F0F0F0;
+    }
+    h1 {
+        padding: 0;
+        margin-top: 0;
+    }
+    #app {
+        width: 1024px;
+        margin: auto;
+    }
 </style>
