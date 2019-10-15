@@ -1,14 +1,22 @@
 <template>
     <div id="login">
+        <div id="nav">
+            <p>Not a user? 
+                <router-link to="/sign-up">Click here to sign-up.</router-link> 
+            </p>
+        </div>
+        
         <form>
-            <label>Login</label>
+            <h1>Login</h1>
+            <label>Username</label>
             <input 
                 type="text" 
                 name="username" 
                 v-model="input.username" 
                 placeholder="Username" 
             />
-            
+
+            <label>Password</label>
             <input 
                 type="password" 
                 name="password" 
@@ -26,8 +34,8 @@ export default {
     data() {
         return {
             input: {
-                username: "",
-                password: "",
+                username: '',
+                password: '',
             }
         }
     },
@@ -40,7 +48,7 @@ export default {
                     "password": this.input.password
                 }
 
-                console.log(typeof jsonInp)
+                
                 const response = await fetch('http://localhost:3000/login', {
                     method: 'POST',
                     cors: 'cors',
@@ -48,20 +56,27 @@ export default {
                         Accept:'application/json',
                         'Content-type': 'application/json; charset=UTF-8',
                         
-                        },
+                    },
                     credentials: "same-origin",
                     body: JSON.stringify(jsonInp), 
                 })
 
-                const data = await response.text()
-                console.log(data)
+                const data = await response.text();
+                console.log(data);
+                
 
+                
+                if(data == "Logged in") {
+                    this.$emit("authenticated", true);
+                    this.$router.replace({ name: "secure" });
+                } else {
+                    console.log("The username and / or password is incorrect");
+                }
+                
             } catch (error) {
-                console.log(error)
+                console.log(error);
             }
         },
-
-
 
 
 

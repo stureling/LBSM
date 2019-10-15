@@ -15,6 +15,7 @@ import VueRouter from 'vue-router'
 
 import LoginComponent from "@/views/login.vue"
 import SecureComponent from "@/views/secure.vue"
+import SignUpComponent from "@/views/sign.vue"
 
 Vue.use(VueRouter)
 
@@ -22,20 +23,25 @@ const router = new VueRouter
 ({
     routes: [
         {
-            path: '/',
-            redirect: {
-                name: "login"
-            }
+          path: '/',
+          redirect: {
+              name: "sign-up",
+          },
         },
         {
-            path: "/login",
-            name: "login",
-            component: LoginComponent
+          path: '/sign-up',
+          name: 'sign-up',
+          component: SignUpComponent
         },
         {
-            path: "/secure",
-            name: "secure",
-            component: SecureComponent
+          path: '/login',
+          name: 'login',
+          component: LoginComponent
+        },
+        {
+          path: '/secure',
+          name: 'secure',
+          component: SecureComponent
         }
     ]
 })
@@ -43,4 +49,4 @@ const router = new VueRouter
 window.app = new Vue({
     router,
     render: h => h(App),
-}).$mount('#app')
+}).$mount('#app');
