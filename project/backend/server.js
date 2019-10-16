@@ -170,13 +170,14 @@ app.get('/logout', function(req, res){
 app.post('/register', function(req, res){
     //register a new user
     console.log(req.body)
+    console.log(req.url)
     User.findOne({username : req.body.username }, function(err, user){
         if (err) throw err;
 
         if (user == null){
             //The hashing step could be moved to frontend for extra security
             bcrypt.hash(req.body.password, saltRounds, function(err, hash){
-                console.log("passord: ", req.body.password);
+                console.log("password: ", req.body.password);
                 console.log("hash: ", hash);
                 var newUser = new User({username: req.body.username,
                     // use hash instead of req.body.password here
