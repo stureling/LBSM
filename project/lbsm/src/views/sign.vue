@@ -59,11 +59,6 @@ export default {
     methods: {
         async signUp() {
             try{
-                var jsonInp = {
-                    "email": this.input.email,
-                    "username": this.input.username,
-                    "password": this.input.password
-                }
 
                 const response = await fetch('http://localhost:3000/register', {
                     method: 'POST',
@@ -71,12 +66,16 @@ export default {
                     headers: {
                         Accept:'application/json',
                         'Content-type': 'application/json; charset=UTF-8',
-                        
                     },
                     credentials: "same-origin",
-                    body: JSON.stringify(jsonInp), 
+                    body: JSON.stringify({                        
+                        email: this.input.email,
+                        username: this.input.username,
+                        password: this.input.password
+                    }), 
                 })
 
+                //console.log(response.ok)
                 const data = await response.text();
                 console.log(data);
 

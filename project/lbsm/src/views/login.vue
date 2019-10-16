@@ -43,11 +43,6 @@ export default {
 
         async login() {
             try{
-                var jsonInp = {
-                    "username": this.input.username,
-                    "password": this.input.password
-                }
-
                 
                 const response = await fetch('http://localhost:3000/login', {
                     method: 'POST',
@@ -58,9 +53,13 @@ export default {
                         
                     },
                     credentials: "same-origin",
-                    body: JSON.stringify(jsonInp), 
+                    body: JSON.stringify({
+                        username: this.input.username,
+                        password: this.input.password,
+                    }), 
                 })
 
+                console.log(response)
                 const data = await response.text();
                 console.log(data);
                 
@@ -77,24 +76,6 @@ export default {
                 console.log(error);
             }
         },
-
-
-
-        /*
-        login() {
-            if(this.input.username != "" && this.input.password != "") {
-
-                if(this.input.username == this.$parent.mockAccount.username && this.input.password == this.$parent.mockAccount.password) {
-                    this.$emit("authenticated", true);
-                    this.$router.replace({ name: "secure" });
-                } else {
-                    console.log("The username and / or password is incorrect");
-                }
-            } else {
-                console.log("A username and password must be present");
-            }
-        }
-        */
     }
 }
 </script>
