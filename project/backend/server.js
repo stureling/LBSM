@@ -1,5 +1,6 @@
 const express = require('express');
 const cookieParser = require('cookie-parser')
+const session = require('express-session')
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const cors = require('cors');
@@ -8,8 +9,7 @@ const mongoose = require('mongoose')
 const port = 3000;
 const secret = 'superdupersecret'
 
-// FUNCTIONS
-
+// MISC FUNCTIONS
 
 
 // MONGOOSE CONFIGURATION
@@ -26,13 +26,20 @@ db.once('open', function() {
 var Schema = mongoose.Schema;
 
 var UserSchema = new Schema({
-    username: String,
-    password: String,
-    email: String,
-    sessions: Array,
-    friends: Array,
-    boops: Array,
-    content: Array
+    username:   String,
+    password:   String,
+    email:      String,
+    sessions:   Array,
+    friends:    Array,
+    friendreq:  Array,
+    boops:      Array
+});
+
+var PostSchema = new Schema({
+    postedBy:   String,
+    postedTo:   String,
+    postedAt:   Date,
+    post:       String
 });
 
 var User = mongoose.model('User', UserSchema)
@@ -40,15 +47,34 @@ var User = mongoose.model('User', UserSchema)
 // EXPRESS MIDDLEWARE INITIALIZATION
 
 var app = express();
-app.use(cookieParser(secret))
-app.use(cors());
+//app.use(cookieParser(secret))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true}));
 app.use(express.json());
 app.use(express.urlencoded());
+app.use(cors({
+    "credentials": true,
+    "origin": ["http://127.0.0.1:8080", "http://localhost:8080", "http://10.253.244.88:8080"],
+    "methods": "GET, POST, PUT",
+    "allowedHeaders": "Origin, X-Requested-With, Content-Type, Accept",
+    "preflightContinue": true
+}));
 
+app.use(cookieParser());
+app.use(session({
+    secret: secret,
+    resave: true,
+    saveUninitialized: true,
+    cookie: { maxAge: 30 * 86400 * 1000 }
+}));
+/*
+app.use(function(req, res, next){
+    res.header("Access-Control-Allow-Origin", "*")
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+    next();
+});
+*/
 //  PATHS
-
 app.param('username', function (req, res, next, user) {
   // ... Perform database query and
   // ... Store the user object from the database in the req object
@@ -81,6 +107,17 @@ app.get('/user/:username', function(req, res){
     });
 });
 
+app.get('/validauth', function(req, res){
+//specific users page
+    User.findOne({sessions : req.signedCookies.accessToken }, function(err, user){
+        if(!user){
+            res.status(200).send("false");
+        }else{
+            res.status(200).send("true")
+        }
+    });
+});
+
 app.get('/user/:username/friends', function(req, res){
 //specific users friendlist
     User.findOne( { username: req.user.username }, function(err, user){
@@ -89,26 +126,40 @@ app.get('/user/:username/friends', function(req, res){
 });
 
 app.get('/user/:username/addfriend', function(req, res){
-//add user to friendlist
+//send friendrequest
     var friend = req.user.username
+    //User.findOne({sessions : req.signedCookies.accessToken }, function(err, user) 
     User.findOneAndUpdate({sessions : req.signedCookies.accessToken }, 
-        {$push: {friends: friend}}, 
-        function(err, user){
+        {$push: {friendreq: friend}}, 
+        function(err, requstedFriend){
             if(!user){
                 res.status(401).send("HTTP 401: Unauthorized, please log in");
             }else{
-                res.send(friend," added to friends")
+                res.send(friend," added to friend requests of ", user.username)
             }
     });
 });
 
 app.get('/user/:username/removefriend', function(req, res){
-//add user to friendlist
+//remove user from friendlist
+    var friend = req.user.username
+    User.findOneAndUpdate({sessions : req.signedCookies.accessToken }, 
+        {$remove: {friends: friend}}, 
+        function(err, user){
+            if(!user){
+                res.status(401).send("HTTP 401: Unauthorized, please log in");
+            }else{
+                res.send(friend," removed from friends of ", user.username)
+            }
+            user.findOneAndUpdate({username: friend},{$remove: {friends: user.username}}, function(){
 
+            });
+    });
 });
 
 app.get('/home', function(req, res){
 //test page
+    console.log(req.session)
     res.send("Welcome to the home page!")
 });
 
@@ -140,24 +191,28 @@ app.post('/login', function(req, res){
             //});
             if(user.password == req.body.password){
                 var options = {
+                    httpOnly: true,
+                    secure: false, // indicates cookie can be sent over http
                     maxAge: 1000 * 60 * 60 * 24 * 128, // would expire after 128 days
                     signed: true // Indicates if the cookie should be signed
                 }
                 var d = new Date();
                 var currentTime = d.getTime();
                 cookieValue = user.username + ' ' + currentTime;
-                console.log("new session: ", cookieValue);
-                res.cookie('accessToken', cookieValue, options);
+                //console.log("new session: ", cookieValue);
+                //res.cookie('accessToken', cookieValue, options);
+                req.session.user = user.username;
+                //
                 User.findOneAndUpdate({ username: user.username }, { $push: { sessions: cookieValue }}, {useFindAndModify: false },function(err, result){
                     if (err) throw err;
                     console.log(result)
                 });
                 res.send("Logged in");
             }else{
-                res.send("Invalid password");
+                res.status(401).send("HTTP 401: Unauthorized, invalid password");
             }
         }else{
-            res.send("Invalid username");
+            res.status(401).send("HTTP 401: Unauthorized, invalid username");
         }
     })
     
@@ -194,7 +249,8 @@ app.post('/register', function(req, res){
                 });
                 res.send("user registered")
             });
-        }else{
+        }
+        else{
             res.send("user already in database");
         }
     })
