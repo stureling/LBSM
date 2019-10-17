@@ -78,13 +78,6 @@ app.use(session({
     saveUninitialized: true,
     cookie: { maxAge: 30 * 86400 * 1000 }
 }));
-/*
-app.use(function(req, res, next){
-    res.header("Access-Control-Allow-Origin", "*")
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
-    next();
-});
-*/
 // ENCRYPTION
 
 
@@ -98,12 +91,19 @@ var signingKey = secureRandom(256, {type: 'Buffer'}); // Create a highly random 
 app.param('username', function (req, res, next, user) {
   // ... Perform database query and
   // ... Store the user object from the database in the req object
-    User.findOne({username: user}, function(err, userObject){
-        if(!userObject){ 
-            res.status(404).send("User not found");
+    User.findOne({sessions : req.session.id }, function(err, logUser){
+        if(!logUser){
+            res.status(401).send("HTTP 401: Unauthorized, please log in");
         }else{
-        req.user = userObject;
-        return next();
+            User.findOne({username: user}, function(err, reqUser){
+                if(!reqUser){ 
+                    res.status(404).send("User not found");
+                }else{
+                    req.reqUser = reqUser;
+                    req.logUser = logUser;
+                    return next();
+                }
+            });
         }
     });
 });
@@ -118,21 +118,11 @@ app.all('*', function(req, res, next){
 
 app.get('/user/:username', function(req, res){
 //specific users page
-    res.status(200).send("page of user " + req.user.username)
-    /*
-    User.findOne({sessions : req.signedCookies.accessToken }, function(err, user){
-        if(!user){
-            res.status(401).send("HTTP 401: Unauthorized, please log in");
-        }else{
-            res.status(200).send("page of user " + req.user.username)
-        }
-    });
-    */
+    res.status(200).send("page of user " + req.reqUser.username)
 });
-/*
 app.get('/validauth', function(req, res){
 //specific users page
-    User.findOne({sessions : req.signedCookies.accessToken }, function(err, user){
+    User.findOne({sessions : req.session.id }, function(err, user){
         if(!user){
             res.status(200).send("false");
         }else{
@@ -140,47 +130,48 @@ app.get('/validauth', function(req, res){
         }
     });
 });
-*/
 app.get('/user/:username/friends', function(req, res){
 //specific users friendlist
-    User.findOne( { username: req.user.username }, function(err, user){
-        res.send(user.friends)
-    });
+    if ( req.logUser.username in req.reqUser.friends ){
+        res.send(reqUser.friends);
+    }else{
+        res.send("Client not in friend list");
+    }
 });
 
 app.get('/user/:username/addfriend', function(req, res){
 //send friendrequest
-    var friend = req.user.username
-    res.send(friend," added to friend requests of current user")
-    /*User.findOne({sessions : req.signedCookies.accessToken }, function(err, user) 
-    User.findOneAndUpdate({sessions : req.signedCookies.accessToken }, 
-        {$push: {friendreq: friend}}, 
+    User.findOneAndUpdate({username : req.reqUser }, 
+        {$push: {friendreq: req.logUser.username}}, 
         function(err, requstedFriend){
-            if(!user){
-                res.status(401).send("HTTP 401: Unauthorized, please log in");
-            }else{
-                res.send(friend," added to friend requests of ", user.username)
-            }
-    });*/
+
+        if(!requestedFriend){
+            res.send("friend request failed");
+        }else{
+            res.send("friend request sent");
+        }
+    });
 });
 
 app.get('/user/:username/removefriend', function(req, res){
 //remove user from friendlist
-    var friend = req.user.username
-    res.send(friend," added to friend requests of current user")
-    /*
-    User.findOneAndUpdate({sessions : req.signedCookies.accessToken }, 
-        {$remove: {friends: friend}}, 
-        function(err, user){
-            if(!user){
-                res.status(401).send("HTTP 401: Unauthorized, please log in");
-            }else{
-                res.send(friend," removed from friends of ", user.username)
-            }
-            user.findOneAndUpdate({username: friend},{$remove: {friends: user.username}}, function(){
+    User.findOneAndUpdate({username : req.logUser.username }, 
+        {$remove: {friends: req.reqUser.username}}, 
+        function(err, user1){
 
-            });
-    });*/
+        User.findOneAndUpdate({username : req.reqUser.username }, 
+            {$remove: {friends: req.logUser.username}}, 
+            function(err, user2){
+
+            if(!user1 || !user2){
+                res.status(500).send(("Tried to remove friend of undefined user"));
+            }else{
+                console.log(req.logUser.username,
+                    " are no longer friends with ", 
+                    req.reqUser.username);
+            }
+        });
+    });
 });
 
 app.get('/home', function(req, res){
