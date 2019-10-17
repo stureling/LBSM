@@ -233,10 +233,13 @@ app.post('/login', function(req, res){
 
 app.get('/logout', function(req, res){
     // delete session cookie from database
-    User.findOneAndUpdate( { sessions: req.session.id }, 
-        { $remove:{ sessions: [req.session.id]}}, 
+    User.findOne( { sessions: req.session.id }, 
         function(err, user){
-
+        console.log(user.sessions)
+        var index = user.session.indexOf(req.session.id)
+        user.sessions.splice(index, 1)
+        user.save();
+        req.session.destroy();
         res.send("Logged out")
     });
 });
