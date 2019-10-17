@@ -236,9 +236,10 @@ app.get('/logout', function(req, res){
     User.findOne( { sessions: req.session.id }, 
         function(err, user){
         console.log(user.sessions)
-        var index = user.session.indexOf(req.session.id)
+        var index = user.sessions.indexOf(req.session.id)
         user.sessions.splice(index, 1)
         user.save();
+        console.log(user.sessions)
         req.session.destroy();
         res.send("Logged out")
     });
