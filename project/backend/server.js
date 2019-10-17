@@ -3,11 +3,14 @@ const cookieParser = require('cookie-parser')
 const session = require('express-session')
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+const nJwt = require('njwt');
+const secureRandom = require('secure-random');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose')
 const port = 3000;
 const secret = 'superdupersecret'
+
 
 // MISC FUNCTIONS
 
@@ -42,7 +45,15 @@ var PostSchema = new Schema({
     post:       String
 });
 
+var KeySchema = new Schema({
+    passKey:    String,
+    salt:       String,
+    apiKey:     String
+});
+
 var User = mongoose.model('User', UserSchema)
+var Key = mongoose.model('Key', KeySchema)
+var Post = mongoose.model('Post', PostSchema)
 
 // EXPRESS MIDDLEWARE INITIALIZATION
 
@@ -74,7 +85,16 @@ app.use(function(req, res, next){
     next();
 });
 */
-//  PATHS
+// ENCRYPTION
+
+
+Key.find(function(err, key){
+    
+});
+
+var signingKey = secureRandom(256, {type: 'Buffer'}); // Create a highly random byte array of 256 bytes
+
+// PATHS
 app.param('username', function (req, res, next, user) {
   // ... Perform database query and
   // ... Store the user object from the database in the req object
@@ -98,6 +118,8 @@ app.all('*', function(req, res, next){
 
 app.get('/user/:username', function(req, res){
 //specific users page
+    res.status(200).send("page of user " + req.user.username)
+    /*
     User.findOne({sessions : req.signedCookies.accessToken }, function(err, user){
         if(!user){
             res.status(401).send("HTTP 401: Unauthorized, please log in");
@@ -105,8 +127,9 @@ app.get('/user/:username', function(req, res){
             res.status(200).send("page of user " + req.user.username)
         }
     });
+    */
 });
-
+/*
 app.get('/validauth', function(req, res){
 //specific users page
     User.findOne({sessions : req.signedCookies.accessToken }, function(err, user){
@@ -117,7 +140,7 @@ app.get('/validauth', function(req, res){
         }
     });
 });
-
+*/
 app.get('/user/:username/friends', function(req, res){
 //specific users friendlist
     User.findOne( { username: req.user.username }, function(err, user){
@@ -128,7 +151,8 @@ app.get('/user/:username/friends', function(req, res){
 app.get('/user/:username/addfriend', function(req, res){
 //send friendrequest
     var friend = req.user.username
-    //User.findOne({sessions : req.signedCookies.accessToken }, function(err, user) 
+    res.send(friend," added to friend requests of current user")
+    /*User.findOne({sessions : req.signedCookies.accessToken }, function(err, user) 
     User.findOneAndUpdate({sessions : req.signedCookies.accessToken }, 
         {$push: {friendreq: friend}}, 
         function(err, requstedFriend){
@@ -137,12 +161,14 @@ app.get('/user/:username/addfriend', function(req, res){
             }else{
                 res.send(friend," added to friend requests of ", user.username)
             }
-    });
+    });*/
 });
 
 app.get('/user/:username/removefriend', function(req, res){
 //remove user from friendlist
     var friend = req.user.username
+    res.send(friend," added to friend requests of current user")
+    /*
     User.findOneAndUpdate({sessions : req.signedCookies.accessToken }, 
         {$remove: {friends: friend}}, 
         function(err, user){
@@ -154,17 +180,18 @@ app.get('/user/:username/removefriend', function(req, res){
             user.findOneAndUpdate({username: friend},{$remove: {friends: user.username}}, function(){
 
             });
-    });
+    });*/
 });
 
 app.get('/home', function(req, res){
 //test page
-    console.log(req.session)
+    //console.log(req.session)
     res.send("Welcome to the home page!")
 });
 
 app.get('/unauthourize', function(req, res){
 //test page
+    res.send()
     User.findOneAndUpdate( { sessions: req.signedCookies.accessToken }, 
         { $set:{ sessions: [req.signedCookies.accessToken]}}, 
         function(err, user){
@@ -183,6 +210,7 @@ app.post('/login', function(req, res){
     console.log("request body: ",req.body);
     User.findOne({username : req.body.username }, function(err, user){
         if (err) throw err;
+        console.log(user)
 
         if (user != null){
             //The hashing step could be moved to frontend for extra security
@@ -207,7 +235,7 @@ app.post('/login', function(req, res){
                     if (err) throw err;
                     console.log(result)
                 });
-                res.send("Logged in");
+                res.json(req.session.user);
             }else{
                 res.status(401).send("HTTP 401: Unauthorized, invalid password");
             }
