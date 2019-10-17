@@ -9,16 +9,12 @@
         <form>
             <h1>Sign Up</h1>
 
-            <label>Email</label>
-
             <input 
                 type="text" 
                 name="email" 
                 v-model="input.email" 
                 placeholder="E-mail" 
             />
-
-            <label>Username</label>
 
             <input 
                 type="text" 
@@ -27,8 +23,6 @@
                 placeholder="Username" 
             />
 
-            <label>Password</label>
-            
             <input 
                 type="password" 
                 name="password" 
@@ -81,6 +75,7 @@ export default {
 
                 
                 if(data == "user registered") {
+
                     this.$router.replace({ name: "login" });
                 } else {
                     console.log("The username and / or password is incorrect");

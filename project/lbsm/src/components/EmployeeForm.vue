@@ -54,6 +54,8 @@ export default {
     },
     methods: {
         handleSubmit() {
+
+            console.log("HEJJJJJJJJJJJJJ IM IN HANDKLSUBMIT")
             this.submitting = true
             this.clearStatus()
 
@@ -62,7 +64,7 @@ export default {
                 return
             }
 
-            this.$emit('add:employee', this.employee)
+            //this.$emit('add:employee', this.employee)
             this.$refs.first.focus()
             this.employee = {
                 name: '',

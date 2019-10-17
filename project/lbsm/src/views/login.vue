@@ -8,7 +8,6 @@
         
         <form>
             <h1>Login</h1>
-            <label>Username</label>
             <input 
                 type="text" 
                 name="username" 
@@ -16,7 +15,6 @@
                 placeholder="Username" 
             />
 
-            <label>Password</label>
             <input 
                 type="password" 
                 name="password" 
@@ -67,7 +65,7 @@ export default {
                 
                 if(data == "Logged in") {
                     this.$emit("authenticated", true);
-                    this.$router.replace({ name: "secure" });
+                    this.$router.replace({ name: "home" });
                 } else {
                     console.log("The username and / or password is incorrect");
                 }

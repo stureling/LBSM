@@ -1,23 +1,16 @@
-/*
-import Vue from 'vue'
-import App from './App.vue'
+import Vue from 'vue';
+import App from './App.vue';
+import VueRouter from 'vue-router';
+import Vuelidate from 'vuelidate';
+import BootstrapVue from 'bootstrap-vue';
 
-Vue.config.productionTip = false
+import LoginComponent from './views/login.vue';
+import SecureComponent from './views/home.vue';
+import SignUpComponent from './views/sign.vue';
 
-new Vue({
-  render: h => h(App),
-}).$mount('#app')
-*/
-
-import Vue from 'vue'
-import App from '@/App.vue'
-import VueRouter from 'vue-router'
-
-import LoginComponent from "@/views/login.vue"
-import SecureComponent from "@/views/secure.vue"
-import SignUpComponent from "@/views/sign.vue"
-
-Vue.use(VueRouter)
+Vue.use(VueRouter);
+Vue.use(Vuelidate);
+Vue.use(BootstrapVue);
 
 const router = new VueRouter
 ({
@@ -39,8 +32,8 @@ const router = new VueRouter
           component: LoginComponent
         },
         {
-          path: '/secure',
-          name: 'secure',
+          path: '/home',
+          name: 'home',
           component: SecureComponent
         }
     ]
