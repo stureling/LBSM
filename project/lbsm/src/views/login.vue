@@ -42,39 +42,14 @@ export default {
     methods: {
 
         async login() {
-            try{
-                
-                const response = await fetch('http://localhost:3000/login', {
-                    method: 'POST',
-                    cors: 'cors',
-                    headers: {
-                        Accept:'application/json',
-                        'Content-type': 'application/json; charset=UTF-8',
-                        
-                    },
-                    credentials: "same-origin",
-                    body: JSON.stringify({
-                        username: this.input.username,
-                        password: this.input.password,
-                    }), 
-                })
-
-                console.log(response)
-                const data = await response.text();
+            $.ajax({ 
+            type: 'POST',
+            url: "http://127.0.0.1:3000/login", 
+            data : {username: "stu", password: "stu" },
+            xhrFields: {withCredentials: true}
+            }).done(function( data ) {
                 console.log(data);
-                
-
-                
-                if(data == "Logged in") {
-                    this.$emit("authenticated", true);
-                    this.$router.replace({ name: "secure" });
-                } else {
-                    console.log("The username and / or password is incorrect");
-                }
-                
-            } catch (error) {
-                console.log(error);
-            }
+            });
         },
     }
 }
