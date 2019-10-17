@@ -52,38 +52,19 @@ export default {
 
     methods: {
         async signUp() {
-            try{
 
-                const response = await fetch('http://localhost:3000/register', {
-                    method: 'POST',
-                    cors: 'cors',
-                    headers: {
-                        Accept:'application/json',
-                        'Content-type': 'application/json; charset=UTF-8',
-                    },
-                    credentials: "same-origin",
-                    body: JSON.stringify({                        
-                        email: this.input.email,
-                        username: this.input.username,
-                        password: this.input.password
-                    }), 
-                })
-
-                //console.log(response.ok)
-                const data = await response.text();
+            $.ajax({ 
+            type: 'POST',
+            url: "http://127.0.0.1:3000/register", 
+            data : {
+                username: this.input.name, 
+                password: this.input.password, 
+                email: this.input.email 
+                },
+            xhrFields: {withCredentials: true}
+            }).done(function( data ) {
                 console.log(data);
-
-                
-                if(data == "user registered") {
-
-                    this.$router.replace({ name: "login" });
-                } else {
-                    console.log("The username and / or password is incorrect");
-                }
-
-            } catch (error) {
-                console.log(error);
-            }
+            });
         },
     }
     

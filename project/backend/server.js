@@ -218,20 +218,9 @@ app.post('/login', function(req, res){
             //
             //});
             if(user.password == req.body.password){
-                var options = {
-                    httpOnly: true,
-                    secure: false, // indicates cookie can be sent over http
-                    maxAge: 1000 * 60 * 60 * 24 * 128, // would expire after 128 days
-                    signed: true // Indicates if the cookie should be signed
-                }
-                var d = new Date();
-                var currentTime = d.getTime();
-                cookieValue = user.username + ' ' + currentTime;
-                //console.log("new session: ", cookieValue);
-                //res.cookie('accessToken', cookieValue, options);
-                req.session.user = user.username;
+                req.session.user = user.username
                 //
-                User.findOneAndUpdate({ username: user.username }, { $push: { sessions: cookieValue }}, {useFindAndModify: false },function(err, result){
+                User.findOneAndUpdate({ username: user.username }, { $push: { sessions: req.session.id }}, {useFindAndModify: false },function(err, result){
                     if (err) throw err;
                     console.log(result)
                 });
