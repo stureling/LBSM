@@ -176,8 +176,13 @@ app.get('/user/:username/removefriend', function(req, res){
 
 app.get('/home', function(req, res){
 //test page
-    //console.log(req.session)
-    res.send("Welcome to the home page!")
+    User.findOne({sessions : req.session.id }, function(err, logUser){
+        if(!logUser){
+            res.status(401).send("HTTP 401: Unauthorized, please log in");
+        }else{
+            res.send("Welcome to the home page for user: ", logUser.username)
+        }
+    });
 });
 
 app.get('/unauthourize', function(req, res){
