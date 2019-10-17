@@ -40,7 +40,10 @@ export default {
     methods: {
 
         async login() {
-            $.ajax({ 
+
+            var dataObject = this
+
+            var request = $.ajax({ 
             type: 'POST',
             url: "http://127.0.0.1:3000/login", 
             data : {
@@ -48,8 +51,19 @@ export default {
                 password: this.input.password, 
             },
             xhrFields: {withCredentials: true}
-            }).done(function( data ) {
-                console.log(data);
+            });
+
+            request.done(function( data ) {
+
+                if(data == dataObject.input.username) {
+                    dataObject.$router.replace({ name: "home" });
+                } else {
+                    console.log("INVALID USERNAME OR PASSWORD")
+                }
+            });
+
+            request.fail(function() {
+                alert("Du suger");
             });
         },
     }
@@ -57,12 +71,12 @@ export default {
 </script>
 
 <style scoped>
-    #login {
-        width: 500px;
-        border: 1px solid #CCCCCC;
-        background-color: #FFFFFF;
-        margin: auto;
-        margin-top: 200px;
-        padding: 20px;
-    }
+#login {
+    width: 500px;
+    border: 1px solid #CCCCCC;
+    background-color: #FFFFFF;
+    margin: auto;
+    margin-top: 200px;
+    padding: 20px;
+}
 </style>

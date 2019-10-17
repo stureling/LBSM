@@ -6,9 +6,9 @@ import BootstrapVue from 'bootstrap-vue';
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
-import LoginComponent from './views/login.vue';
-import SecureComponent from './views/home.vue';
-import SignUpComponent from './views/sign.vue';
+import LoginComponent from './views/LoginComponent.vue';
+import HomeComponent from './views/HomeComponent.vue';
+import SignUpComponent from './views/SignUpComponent.vue';
 
 Vue.use(VueRouter);
 Vue.use(Vuelidate);
@@ -20,7 +20,7 @@ const router = new VueRouter
         {
           path: '/',
           redirect: {
-              name: "sign-up",
+              name: "home",
           },
         },
         {
@@ -36,7 +36,7 @@ const router = new VueRouter
         {
           path: '/home',
           name: 'home',
-          component: SecureComponent
+          component: HomeComponent
         }
     ]
 })

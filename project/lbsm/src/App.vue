@@ -1,33 +1,26 @@
 <template>
     <div id="app">
-        <router-view @authenticated="setAuthenticated" />
+        <NavBarComponent/>
+        <router-view/>
     </div>
 </template>
 
 <script>
+import NavBarComponent from '@/components/NavBarComponent.vue'
 
 export default {
     name: 'app',
 
+    components: {
+        NavBarComponent,
+    },
+
     data() {
-        return {
-            authenticated: false,
-        }
+        return {};
     },
     mounted() {
-        if(!this.authenticated) {
-            //this.$router.replace({ name: "login" });
-            this.$router.replace({ name: "sign-up" });
-        }
+        this.$router.replace({ name: "home" });
     },
-    methods: {
-        setAuthenticated(status) {
-            this.authenticated = status;
-        },
-        logout() {
-            this.authenticated = false;
-        }
-    }
 }
 </script>
 
@@ -39,7 +32,7 @@ export default {
 }
 body {
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-    background-color: #e6ecf0;
+    background-color:red;
     margin: 0;
 }
 h1 {

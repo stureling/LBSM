@@ -29,7 +29,7 @@
                 v-model="input.password" 
                 placeholder="Password" 
             />
-            <button type="button" v-on:click="signUp()">Login</button>
+            <button type="button" v-on:click="signUp()">Sign up</button>
         </form>
     </div>
 </template>
@@ -44,7 +44,7 @@ export default {
             success: false,
             input: {        
                 email: '',
-                name: '',
+                username: '',
                 password: '',
             },
         }
@@ -53,21 +53,22 @@ export default {
     methods: {
         async signUp() {
 
+            var dataObject = this
+            
             $.ajax({ 
             type: 'POST',
             url: "http://127.0.0.1:3000/register", 
-            data : {
-                username: this.input.name, 
+            data: {
+                username: this.input.username, 
                 password: this.input.password, 
-                email: this.input.email 
-                },
+                email: this.input.email,
+            },
             xhrFields: {withCredentials: true}
             }).done(function( data ) {
                 console.log(data);
 
-                
                 if(data == "user registered") {
-                    this.$router.replace({ name: "login" });
+                    dataObject.$router.replace({ name: "login" });
                 } else {
                     console.log("The username and / or password is incorrect");
                 }

@@ -180,7 +180,7 @@ app.get('/home', function(req, res){
         if(!logUser){
             res.status(401).send("HTTP 401: Unauthorized, please log in");
         }else{
-            res.send("Welcome to the home page for user: ", logUser.username)
+            res.send("Welcome to the home page for user: " + logUser.username)
         }
     });
 });
@@ -233,6 +233,12 @@ app.post('/login', function(req, res){
 
 app.get('/logout', function(req, res){
     // delete session cookie from database
+    User.findOneAndUpdate( { sessions: req.session.id }, 
+        { $remove:{ sessions: [req.session.id]}}, 
+        function(err, user){
+
+        res.send("Logged out")
+    });
 });
 
 app.post('/register', function(req, res){
