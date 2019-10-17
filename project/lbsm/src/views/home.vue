@@ -17,9 +17,6 @@ export default {
 </script>
 
 <style scoped>
-</style>
-
-
     #home {
         width: auto;
         border: 1px solid #CCCCCC;
@@ -28,3 +25,5 @@ export default {
         margin-top: 200px;
         padding: 20px;
     }
+</style>
+

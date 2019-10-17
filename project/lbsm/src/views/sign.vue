@@ -75,7 +75,6 @@ export default {
 
                 
                 if(data == "user registered") {
-
                     this.$router.replace({ name: "login" });
                 } else {
                     console.log("The username and / or password is incorrect");
@@ -91,12 +90,12 @@ export default {
 </script>
 
 <style scoped>
-    #sign-up {
-        width: 500px;
-        border: 1px solid #CCCCCC;
-        background-color: #FFFFFF;
-        margin: auto;
-        margin-top: 200px;
-        padding: 20px;
-    }
+#sign-up {
+    width: 500px;
+    border: 1px solid #CCCCCC;
+    background-color: #FFFFFF;
+    margin: auto;
+    margin-top: 200px;
+    padding: 20px;
+}
 </style>

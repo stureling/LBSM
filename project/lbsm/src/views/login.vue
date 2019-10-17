@@ -43,7 +43,10 @@ export default {
             $.ajax({ 
             type: 'POST',
             url: "http://127.0.0.1:3000/login", 
-            data : {username: "stu", password: "stu" },
+            data : {
+                username: this.input.username, 
+                password: this.input.password, 
+            },
             xhrFields: {withCredentials: true}
             }).done(function( data ) {
                 console.log(data);

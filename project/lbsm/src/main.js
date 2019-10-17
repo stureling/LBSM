@@ -3,6 +3,8 @@ import App from './App.vue';
 import VueRouter from 'vue-router';
 import Vuelidate from 'vuelidate';
 import BootstrapVue from 'bootstrap-vue';
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 import LoginComponent from './views/login.vue';
 import SecureComponent from './views/home.vue';
