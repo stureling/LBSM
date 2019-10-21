@@ -1,28 +1,37 @@
 <template>
     <div id="login">
-        <div id="nav">
-            <p>Not a user? 
-                <router-link to="/sign-up">Click here to sign-up.</router-link> 
-            </p>
-        </div>
-        
-        <form>
+        <b-form @submit="onSubmit" v-if="show">
             <h1>Login</h1>
-            <input 
-                type="text" 
-                name="username" 
-                v-model="input.username" 
-                placeholder="Username" 
-            />
+            
+            <b-form-group id="input-group-1" label="Your Username:" label-for="input-1">
+                <b-form-input
+                    id="input-1"
+                    v-model="form.username"
+                    type="text"
+                    placeholder="Enter username"
+                    required
+                ></b-form-input>
+            </b-form-group>
 
-            <input 
-                type="password" 
-                name="password" 
-                v-model="input.password" 
-                placeholder="Password" 
-            />
-            <button type="button" v-on:click="login()">Login</button>
-        </form>
+            <b-form-group id="input-group-2" label="Password:" label-for="input-2">
+                <b-form-input
+                    id="input-2"
+                    v-model="form.password"
+                    type="password"
+                    placeholder="Enter Password"
+                    required
+                ></b-form-input>
+            </b-form-group>
+ 
+            <div>       
+                <p v-if="failure" class="error"> Wrong username or password! Please try again</p>
+                <b-button type="submit" variant="primary">Login</b-button>
+            
+                <p>Not a user? 
+                    <router-link to="/sign-up">Click here to sign-up.</router-link> 
+                </p>
+            </div>
+        </b-form>
     </div>
 </template>
 
@@ -31,14 +40,27 @@ export default {
     name: 'login',
     data() {
         return {
-            input: {
+            form: {
                 username: '',
                 password: '',
-            }
+            },
+            show: true,
+            failure: false,
         }
     },
     methods: {
+        wrongInput() {
+            // Reset our form values
+            this.form.username = ''
+            this.form.password = ''
+            this.show = false
+            this.$nextTick(() => {
+                this.show = true
+            })
+            this.failure = true
 
+            console.log("IM INSIDE WRONG INPOUT", this.failure)
+        },
         async login() {
 
             var dataObject = this
@@ -46,25 +68,29 @@ export default {
             var request = $.ajax({ 
             type: 'POST',
             url: "http://127.0.0.1:3000/login", 
-            data : {
-                username: this.input.username, 
-                password: this.input.password, 
+            data: {
+                username: this.form.username, 
+                password: this.form.password, 
             },
             xhrFields: {withCredentials: true}
             });
 
             request.done(function( data ) {
 
-                if(data == dataObject.input.username) {
+                if(data == dataObject.form.username) {
                     dataObject.$router.replace({ name: "home" });
-                } else {
-                    console.log("INVALID USERNAME OR PASSWORD")
                 }
             });
 
             request.fail(function() {
-                alert("Du suger");
+                dataObject.wrongInput();
             });
+        },
+        
+        onSubmit(evt) {
+            evt.preventDefault();
+            //alert(JSON.stringify(this))
+            this.login();
         },
     }
 }
@@ -78,5 +104,9 @@ export default {
     margin: auto;
     margin-top: 200px;
     padding: 20px;
+}
+.error {
+    border:  20px solid red;
+    padding: 30px;
 }
 </style>

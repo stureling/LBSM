@@ -1,17 +1,37 @@
 <template>
-    <div id="home">
-        <h1>Secure Area</h1>
-        <p>
-            This is the home area
-        </p>
+    <div>
+        <div>
+            <NavBarComponent/>
+        </div>
+        <div id="home">        
+            <h1>Secure Area</h1>
+            <p>
+                {{data}}
+            </p>
+        </div>
+           <PostAreaComponent/>
+        <div>
+
+        </div>
     </div>
 </template>
 
 <script>
+import NavBarComponent from '@/components/NavBarComponent.vue'
+import PostAreaComponent from '@/components/PostAreaComponent.vue'
+
 export default {
     name: 'home',
+ 
+    components: {
+        NavBarComponent,
+        PostAreaComponent,
+    },
+
     data() {
-        return {};
+        return {
+            data: '',
+        };
     },
     mounted() {
         this.getData();
@@ -27,6 +47,7 @@ export default {
 
             request.done(function (data) {
                 console.log(data);
+                dataObject.data = data
             });
             
             request.fail(function (statustext) {
@@ -39,13 +60,9 @@ export default {
 </script>
 
 <style scoped>
-    #home {
-        width: auto;
-        border: 1px solid #CCCCCC;
-        background-color: #FFFFFF;
-        margin: auto;
-        margin-top: 200px;
-        padding: 20px;
-    }
+#home {
+    margin-left: 1%;
+    margin-top: 1%;
+}
 </style>
 

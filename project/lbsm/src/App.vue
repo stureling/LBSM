@@ -1,19 +1,13 @@
 <template>
     <div id="app">
-        <NavBarComponent/>
         <router-view/>
     </div>
 </template>
 
 <script>
-import NavBarComponent from '@/components/NavBarComponent.vue'
 
 export default {
     name: 'app',
-
-    components: {
-        NavBarComponent,
-    },
 
     data() {
         return {};
@@ -25,6 +19,12 @@ export default {
 </script>
 
 <style>  
+#app {
+    background-color: teal; 
+}
+
+</style>
+
 .header {
     display: flex;
     justify-content: space-between;
@@ -39,8 +39,3 @@ h1 {
     padding: 0;
     margin-top: 0;
 }
-#app {
-    width: 1024px;
-    margin: auto;
-}
-</style>
