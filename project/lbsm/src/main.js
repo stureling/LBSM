@@ -11,8 +11,8 @@ import HomeComponent from './views/HomeComponent.vue';
 import SignUpComponent from './views/SignUpComponent.vue';
 
 Vue.use(VueRouter);
-Vue.use(Vuelidate);
 Vue.use(BootstrapVue);
+Vue.use(Vuelidate);
 
 const router = new VueRouter
 ({
