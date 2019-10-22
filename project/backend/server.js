@@ -3,8 +3,6 @@ const cookieParser = require('cookie-parser')
 const session = require('express-session')
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
-const nJwt = require('njwt');
-const secureRandom = require('secure-random');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose')
@@ -35,25 +33,12 @@ var UserSchema = new Schema({
     sessions:   Array,
     friends:    Array,
     friendreq:  Array,
-    boops:      Array
-});
-
-var PostSchema = new Schema({
-    postedBy:   String,
-    postedTo:   String,
-    postedAt:   Date,
-    post:       String
-});
-
-var KeySchema = new Schema({
-    passKey:    String,
-    salt:       String,
-    apiKey:     String
+    boops:      Array,
+    postsTo:    Array,
+    postsFrom:  Array
 });
 
 var User = mongoose.model('User', UserSchema)
-var Key = mongoose.model('Key', KeySchema)
-var Post = mongoose.model('Post', PostSchema)
 
 // EXPRESS MIDDLEWARE INITIALIZATION
 
@@ -79,13 +64,23 @@ app.use(session({
     cookie: { maxAge: 30 * 86400 * 1000 }
 }));
 // ENCRYPTION
-
-
-Key.find(function(err, key){
-    
+/*
+var encSalt = undefined
+Salt.find(function(err, salt){
+    if(!salt){
+        bcrypt.genSalt(saltRounds, function(err, newsalt){
+            var newSalt = new Salt({salt: newsalt})
+            newSalt.save();
+            encSalt = newsalt;
+            console.log(encSalt)
+        });
+    }else{
+        encSalt = salt.salt;
+        console.log(encSalt)
+    }
 });
-
-var signingKey = secureRandom(256, {type: 'Buffer'}); // Create a highly random byte array of 256 bytes
+console.log(encSalt)
+*/
 
 // PATHS
 app.param('username', function (req, res, next, user) {
@@ -118,8 +113,27 @@ app.all('*', function(req, res, next){
 
 app.get('/user/:username', function(req, res){
 //specific users page
-    res.status(200).send("page of user " + req.reqUser.username)
+    res.send(req.reqUser.postsTo)
 });
+
+app.post('/user/:username/post', function(req, res){
+//specific users page
+    var d = new Date
+    console.log(d.getTime());
+    var newPost = { 
+        poster: req.logUser.username,
+        postee: req.reqUser.username,
+        text: req.body.text,
+        date: d.getTime() 
+    }
+    User.findOneAndUpdate({username: req.reqUser.username}, {$push: {postsTo: newPost}}, function(err, user){
+    });
+    User.findOneAndUpdate({username: req.logUser.username}, {$push: {postsFrom: newPost}}, function(err, user){
+    });
+    console.log(newPost);
+    res.send('success')
+});
+
 app.get('/validauth', function(req, res){
 //specific users page
     User.findOne({sessions : req.session.id }, function(err, user){
@@ -141,16 +155,20 @@ app.get('/user/:username/friends', function(req, res){
 
 app.get('/user/:username/addfriend', function(req, res){
 //send friendrequest
-    User.findOneAndUpdate({username : req.reqUser }, 
-        {$push: {friendreq: req.logUser.username}}, 
-        function(err, requstedFriend){
+    if( req.logUser.username in req.reqUser.friendreq){
+        res.send("friend request already sent");
+    }else{
+        User.findOneAndUpdate({username : req.reqUser.username }, 
+            {$push: {friendreq: req.logUser.username}}, 
+            function(err, requestedFriend){
 
-        if(!requestedFriend){
-            res.send("friend request failed");
-        }else{
-            res.send("friend request sent");
-        }
-    });
+            if(!requestedFriend){
+                res.send("friend request failed");
+            }else{
+                res.send("friend request sent");
+            }
+        });
+    }
 });
 
 app.get('/user/:username/removefriend', function(req, res){
@@ -188,10 +206,9 @@ app.get('/home', function(req, res){
 app.get('/unauthourize', function(req, res){
 //test page
     res.send()
-    User.findOneAndUpdate( { sessions: req.signedCookies.accessToken }, 
-        { $set:{ sessions: [req.signedCookies.accessToken]}}, 
+    User.findOneAndUpdate( { username: req.logUser.username }, 
+        { $set:{ sessions: [req.session.id]}}, 
         function(err, user){
-
         res.send("Logged out all other sessions")
     });
 });
@@ -213,17 +230,23 @@ app.post('/login', function(req, res){
             //bcrypt.compare(req.body.password, user.password, function(err, result){
             //
             //});
-            if(user.password == req.body.password){
-                req.session.user = user.username
-                //
-                User.findOneAndUpdate({ username: user.username }, { $push: { sessions: req.session.id }}, {useFindAndModify: false },function(err, result){
-                    if (err) throw err;
-                    console.log(result)
-                });
-                res.json(req.session.user);
-            }else{
-                res.status(401).send("HTTP 401: Unauthorized, invalid password");
-            }
+                //TODO compare the encrypted password
+                //if(bcrypt.hashSync(req.body.password, encSalt) === user.password ){
+                if(req.body.password === user.password){
+                    req.session.user = user.username
+                    //
+                    User.findOneAndUpdate({ username: user.username }, 
+                        { $push: { sessions: req.session.id }}, 
+                        {useFindAndModify: false },
+                        function(err, result){
+                        
+                        if (err) throw err;
+                        console.log(result)
+                    });
+                    res.json({username: req.session.user});
+                }else{
+                    res.status(401).send("HTTP 401: Unauthorized, invalid password");
+                }
         }else{
             res.status(401).send("HTTP 401: Unauthorized, invalid username");
         }
@@ -254,24 +277,23 @@ app.post('/register', function(req, res){
 
         if (user == null){
             //The hashing step could be moved to frontend for extra security
-            bcrypt.hash(req.body.password, saltRounds, function(err, hash){
-                console.log("password: ", req.body.password);
-                console.log("hash: ", hash);
-                var newUser = new User({username: req.body.username,
-                    // use hash instead of req.body.password here
-                    password: req.body.password,
-                    email: req.body.email,
-                    sessions: [],
-                    friends: [],
-                    boops: [],
-                    content: [],
-                });
-                newUser.save(function(err, newUser){
-                    if (err) return console.error(err);
-                    console.log("registered user ", newUser)
-                });
-                res.send("user registered")
+                //bcrypt.hash(req.body.password, encSalt, function(err, hash){
+            console.log("password: ", req.body.password);
+            var newUser = new User({username: req.body.username,
+                // use hash instead of req.body.password here
+                password: req.body.password,
+                email: req.body.email,
+                sessions: [],
+                friends: [],
+                boops: [],
+                content: [],
             });
+            newUser.save(function(err, newUser){
+                if (err) return console.error(err);
+                console.log("registered user ", newUser)
+            });
+            res.send("user registered")
+                //});
         }
         else{
             res.send("user already in database");
