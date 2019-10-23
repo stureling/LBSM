@@ -96,7 +96,7 @@ app.param('username', function (req, res, next, user) {
                 }else{
                     req.reqUser = reqUser;
                     req.logUser = logUser;
-                    return next();
+                    next();
                 }
             });
         }
@@ -111,9 +111,43 @@ app.all('*', function(req, res, next){
     }
 })
 
+app.get('/users', function(req, res){
+//specific users page
+    User.findOne({sessions : req.session.id }, function(err, logUser){
+        if(!logUser){
+            res.status(401).send("HTTP 401: Unauthorized, please log in");
+        }else{
+            var response = [];
+            User.find(function(err, data){
+                for(index in data){
+                    response.push(data[index].username)
+                }
+                res.send(response);
+            });
+        }
+    });
+});
+
 app.get('/user/:username', function(req, res){
 //specific users page
-    res.send(req.reqUser.postsTo)
+    if(req.reqUser.friends.includes(req.logUser.username)){
+        res.json({to: req.reqUser.postsTo, from: req.reqUser.postsFrom})
+    }else{
+        res.send("you are not friends with " + req.reqUser.username)
+    }
+});
+
+app.get('/user/:username/status', function(req, res){
+//check friend status
+    if(req.reqUser.friends.includes(req.logUser.username)){
+        res.send("friends")
+    }else if (req.reqUser.friendreq.includes(req.logUser.username)){
+        res.send("pending requsest them")
+    }else if (req.logUser.friendreq.includes(req.reqUser.username)){
+        res.send("pending requsest you")
+    }else{
+        res.send("not friends")
+    }
 });
 
 app.post('/user/:username/post', function(req, res){
@@ -126,11 +160,12 @@ app.post('/user/:username/post', function(req, res){
         text: req.body.text,
         date: d.getTime() 
     }
-    User.findOneAndUpdate({username: req.reqUser.username}, {$push: {postsTo: newPost}}, function(err, user){
-    });
-    User.findOneAndUpdate({username: req.logUser.username}, {$push: {postsFrom: newPost}}, function(err, user){
-    });
-    console.log(newPost);
+    req.reqUser.postsTo.push(newPost)
+    req.logUser.postsFrom.push(newPost)
+
+    req.logUser.save()
+    req.reqUser.save()
+
     res.send('success')
 });
 
@@ -146,50 +181,66 @@ app.get('/validauth', function(req, res){
 });
 app.get('/user/:username/friends', function(req, res){
 //specific users friendlist
-    if ( req.logUser.username in req.reqUser.friends ){
-        res.send(reqUser.friends);
+    if ( req.reqUser.friends.includes(req.logUser.username) || 
+        req.reqUser.username === req.logUser.username ){
+        res.send(req.reqUser.friends);
     }else{
         res.send("Client not in friend list");
+    }
+});
+app.get('/user/:username/friendrequests', function(req, res){
+//specific users incoming friendrequests
+    if (req.reqUser.username === req.logUser.username){
+        res.send(req.reqUser.friendreq);
+    }else{
+        res.send("Only user may see friend requests");
+    }
+});
+
+app.get('/user/:username/acceptfriend', function(req, res){
+//accept friendrequest
+    if( req.logUser.friendreq.includes(req.reqUser.username)){
+        
+        req.reqUser.friends.push(req.logUser.username)
+        req.logUser.friends.push(req.reqUser.username)
+        
+        var friendIndex = req.logUser.friendreq.indexOf(req.reqUser.username);
+        req.logUser.friendreq.splice(friendIndex, 1);
+
+        req.reqUser.save();
+        req.logUser.save();
+
+        res.send(req.logUser.username + " and " + req.reqUser.username + " are now friends");
+    }else{
+        res.send("friend request does not exist");
     }
 });
 
 app.get('/user/:username/addfriend', function(req, res){
 //send friendrequest
-    if( req.logUser.username in req.reqUser.friendreq){
+    if(req.reqUser.friendreq.includes(req.logUser.username)){
         res.send("friend request already sent");
     }else{
-        User.findOneAndUpdate({username : req.reqUser.username }, 
-            {$push: {friendreq: req.logUser.username}}, 
-            function(err, requestedFriend){
-
-            if(!requestedFriend){
-                res.send("friend request failed");
-            }else{
-                res.send("friend request sent");
-            }
-        });
+        req.reqUser.friendreq.push(req.logUser.username);
+        req.reqUser.save()
+        res.send("friend request sent");
     }
 });
 
 app.get('/user/:username/removefriend', function(req, res){
 //remove user from friendlist
-    User.findOneAndUpdate({username : req.logUser.username }, 
-        {$remove: {friends: req.reqUser.username}}, 
-        function(err, user1){
+    var friendIndex = req.logUser.friends.indexOf(req.reqUser.username);
+    req.logUser.friends.splice(friendIndex, 1);
+    req.logUser.save();
 
-        User.findOneAndUpdate({username : req.reqUser.username }, 
-            {$remove: {friends: req.logUser.username}}, 
-            function(err, user2){
+    var friendIndex = req.reqUser.friends.indexOf(req.logUser.username);
+    req.reqUser.friends.splice(friendIndex, 1);
+    req.reqUser.save();
 
-            if(!user1 || !user2){
-                res.status(500).send(("Tried to remove friend of undefined user"));
-            }else{
-                console.log(req.logUser.username,
-                    " are no longer friends with ", 
-                    req.reqUser.username);
-            }
-        });
-    });
+    console.log(req.logUser.username,
+        " are no longer friends with ", 
+        req.reqUser.username);
+    res.send("success")
 });
 
 app.get('/home', function(req, res){
@@ -199,14 +250,14 @@ app.get('/home', function(req, res){
             res.status(401).send("HTTP 401: Unauthorized, please log in");
         }else{
             res.send("Welcome to the home page for user: " + logUser.username)
+            console.log(logUser)
         }
     });
 });
 
 app.get('/unauthourize', function(req, res){
 //test page
-    res.send()
-    User.findOneAndUpdate( { username: req.logUser.username }, 
+    User.findOneAndUpdate( { sessions: req.session.id }, 
         { $set:{ sessions: [req.session.id]}}, 
         function(err, user){
         res.send("Logged out all other sessions")
