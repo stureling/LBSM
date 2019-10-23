@@ -63,24 +63,6 @@ app.use(session({
     saveUninitialized: true,
     cookie: { maxAge: 30 * 86400 * 1000 }
 }));
-// ENCRYPTION
-/*
-var encSalt = undefined
-Salt.find(function(err, salt){
-    if(!salt){
-        bcrypt.genSalt(saltRounds, function(err, newsalt){
-            var newSalt = new Salt({salt: newsalt})
-            newSalt.save();
-            encSalt = newsalt;
-            console.log(encSalt)
-        });
-    }else{
-        encSalt = salt.salt;
-        console.log(encSalt)
-    }
-});
-console.log(encSalt)
-*/
 
 // PATHS
 app.param('username', function (req, res, next, user) {
@@ -169,16 +151,6 @@ app.post('/user/:username/post', function(req, res){
     res.send('success')
 });
 
-app.get('/validauth', function(req, res){
-//specific users page
-    User.findOne({sessions : req.session.id }, function(err, user){
-        if(!user){
-            res.status(200).send("false");
-        }else{
-            res.status(200).send("true")
-        }
-    });
-});
 app.get('/user/:username/friends', function(req, res){
 //specific users friendlist
     if ( req.reqUser.friends.includes(req.logUser.username) || 
@@ -186,33 +158,6 @@ app.get('/user/:username/friends', function(req, res){
         res.send(req.reqUser.friends);
     }else{
         res.send("Client not in friend list");
-    }
-});
-app.get('/user/:username/friendrequests', function(req, res){
-//specific users incoming friendrequests
-    if (req.reqUser.username === req.logUser.username){
-        res.send(req.reqUser.friendreq);
-    }else{
-        res.send("Only user may see friend requests");
-    }
-});
-
-app.get('/user/:username/acceptfriend', function(req, res){
-//accept friendrequest
-    if( req.logUser.friendreq.includes(req.reqUser.username)){
-        
-        req.reqUser.friends.push(req.logUser.username)
-        req.logUser.friends.push(req.reqUser.username)
-        
-        var friendIndex = req.logUser.friendreq.indexOf(req.reqUser.username);
-        req.logUser.friendreq.splice(friendIndex, 1);
-
-        req.reqUser.save();
-        req.logUser.save();
-
-        res.send(req.logUser.username + " and " + req.reqUser.username + " are now friends");
-    }else{
-        res.send("friend request does not exist");
     }
 });
 
@@ -243,6 +188,34 @@ app.get('/user/:username/removefriend', function(req, res){
     res.send("success")
 });
 
+app.get('/user/:username/friendrequests', function(req, res){
+//specific users incoming friendrequests
+    if (req.reqUser.username === req.logUser.username){
+        res.send(req.reqUser.friendreq);
+    }else{
+        res.send("You cannot see other users friend requests");
+    }
+});
+
+app.get('/user/:username/acceptfriend', function(req, res){
+//accept friendrequest
+    if( req.logUser.friendreq.includes(req.reqUser.username)){
+        
+        req.reqUser.friends.push(req.logUser.username)
+        req.logUser.friends.push(req.reqUser.username)
+        
+        var friendIndex = req.logUser.friendreq.indexOf(req.reqUser.username);
+        req.logUser.friendreq.splice(friendIndex, 1);
+
+        req.reqUser.save();
+        req.logUser.save();
+
+        res.send(req.logUser.username + " and " + req.reqUser.username + " are now friends");
+    }else{
+        res.send("friend request does not exist");
+    }
+});
+
 app.get('/home', function(req, res){
 //test page
     User.findOne({sessions : req.session.id }, function(err, logUser){
@@ -264,11 +237,6 @@ app.get('/unauthourize', function(req, res){
     });
 });
 
-app.get('/login', function(req, res){
-//test page
-    res.send("Welome to the login page")
-});
-
 app.post('/login', function(req, res){
     //login
     console.log("request body: ",req.body);
@@ -277,27 +245,20 @@ app.post('/login', function(req, res){
         console.log(user)
 
         if (user != null){
-            //The hashing step could be moved to frontend for extra security
-            //bcrypt.compare(req.body.password, user.password, function(err, result){
-            //
-            //});
-                //TODO compare the encrypted password
-                //if(bcrypt.hashSync(req.body.password, encSalt) === user.password ){
-                if(req.body.password === user.password){
-                    req.session.user = user.username
-                    //
-                    User.findOneAndUpdate({ username: user.username }, 
-                        { $push: { sessions: req.session.id }}, 
-                        {useFindAndModify: false },
-                        function(err, result){
-                        
-                        if (err) throw err;
-                        console.log(result)
-                    });
-                    res.json({username: req.session.user});
-                }else{
-                    res.status(401).send("HTTP 401: Unauthorized, invalid password");
-                }
+            if(req.body.password === user.password){
+                req.session.user = user.username
+                User.findOneAndUpdate({ username: user.username }, 
+                    { $push: { sessions: req.session.id }}, 
+                    {useFindAndModify: false },
+                    function(err, result){
+                    
+                    if (err) throw err;
+                    console.log(result)
+                });
+                res.json({username: req.session.user});
+            }else{
+                res.status(401).send("HTTP 401: Unauthorized, invalid password");
+            }
         }else{
             res.status(401).send("HTTP 401: Unauthorized, invalid username");
         }
@@ -360,6 +321,17 @@ app.get('/cleardatabase', function(req, res){
 
     res.status(200).send("Cleared database");
     console.log("Cleared database");
+});
+
+app.get('/validauth', function(req, res){
+//check if user is logged in
+    User.findOne({sessions : req.session.id }, function(err, user){
+        if(!user){
+            res.status(200).send("false");
+        }else{
+            res.status(200).send("true")
+        }
+    });
 });
 
 app.listen(port, () => console.log(`Express: App listening on port ${port}!`));
