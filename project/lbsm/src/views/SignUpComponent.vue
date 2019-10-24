@@ -93,7 +93,7 @@ export default {
             xhrFields: {withCredentials: true}
             });
             request.done(function( data ) {
-                console.log(data);
+                //console.log(data);
                 if(data === "user already in database") {
                     dataObject.inDB();
                 } else {

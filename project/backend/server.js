@@ -148,7 +148,7 @@ app.post('/user/:username/post', function(req, res){
     req.logUser.save()
     req.reqUser.save()
 
-    res.send('success')
+    res.send(newPost)
 });
 
 app.get('/user/:username/friends', function(req, res){
@@ -222,8 +222,7 @@ app.get('/home', function(req, res){
         if(!logUser){
             res.status(401).send("HTTP 401: Unauthorized, please log in");
         }else{
-            res.send("Welcome to the home page for user: " + logUser.username)
-            console.log(logUser)
+            res.send(logUser.username)
         }
     });
 });
@@ -280,33 +279,37 @@ app.post('/register', function(req, res){
     //register a new user
     console.log(req.body)
     console.log(req.url)
-    User.findOne({username : req.body.username }, function(err, user){
-        if (err) throw err;
-
-        if (user == null){
-            //The hashing step could be moved to frontend for extra security
-                //bcrypt.hash(req.body.password, encSalt, function(err, hash){
-            console.log("password: ", req.body.password);
-            var newUser = new User({username: req.body.username,
-                // use hash instead of req.body.password here
-                password: req.body.password,
-                email: req.body.email,
-                sessions: [],
-                friends: [],
-                boops: [],
-                content: [],
-            });
-            newUser.save(function(err, newUser){
-                if (err) return console.error(err);
-                console.log("registered user ", newUser)
-            });
-            res.send("user registered")
-                //});
-        }
-        else{
-            res.send("user already in database");
-        }
-    })
+    if (req.body.email === '' || req.body.username === '' || req.body.password === '' ) {
+        res.status(401).send("HTTP 401: Unauthorized, invalid password");
+    }else {
+        User.findOne({username : req.body.username }, function(err, user){
+            if (err) throw err;
+    
+            if (user == null){
+                //The hashing step could be moved to frontend for extra security
+                    //bcrypt.hash(req.body.password, encSalt, function(err, hash){
+                console.log("password: ", req.body.password);
+                var newUser = new User({username: req.body.username,
+                    // use hash instead of req.body.password here
+                    password: req.body.password,
+                    email: req.body.email,
+                    sessions: [],
+                    friends: [],
+                    boops: [],
+                    content: [],
+                });
+                newUser.save(function(err, newUser){
+                    if (err) return console.error(err);
+                    console.log("registered user ", newUser)
+                });
+                res.send("user registered")
+                    //});
+            }
+            else{
+                res.send("user already in database");
+            }
+        })
+    }
 });
 
 app.get('/cleardatabase', function(req, res){
