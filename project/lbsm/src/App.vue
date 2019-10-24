@@ -19,12 +19,12 @@ export default {
 </script>
 
 <style>  
-#app {
-    background-color: teal; 
-}
 
 </style>
 
+#app {
+    background-color: teal; 
+}
 .header {
     display: flex;
     justify-content: space-between;

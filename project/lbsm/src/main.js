@@ -9,6 +9,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import LoginComponent from './views/LoginComponent.vue';
 import HomeComponent from './views/HomeComponent.vue';
 import SignUpComponent from './views/SignUpComponent.vue';
+import FriendsListComponent from './views/FriendsListComponent.vue';
 
 Vue.use(VueRouter);
 Vue.use(BootstrapVue);
@@ -37,6 +38,11 @@ const router = new VueRouter
           path: '/home',
           name: 'home',
           component: HomeComponent
+        },
+        {
+          path: '/friends',
+          name: 'friends-list',
+          component: FriendsListComponent
         }
     ]
 })

@@ -58,8 +58,6 @@ export default {
                 this.show = true
             })
             this.failure = true
-
-            console.log("IM INSIDE WRONG INPOUT", this.failure)
         },
         async login() {
 
@@ -76,8 +74,7 @@ export default {
             });
 
             request.done(function( data ) {
-
-                if(data == dataObject.form.username) {
+                if(data.username == dataObject.form.username) {
                     dataObject.$router.replace({ name: "home" });
                 }
             });
