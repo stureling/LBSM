@@ -247,14 +247,10 @@ app.post('/login', function(req, res){
         if (user != null){
             if(req.body.password === user.password){
                 req.session.user = user.username
-                User.findOneAndUpdate({ username: user.username }, 
-                    { $push: { sessions: req.session.id }}, 
-                    {useFindAndModify: false },
-                    function(err, result){
-                    
-                    if (err) throw err;
-                    console.log(result)
-                });
+                if (!user.sessions.includes(req.session.id)){
+                    user.sessions.push(req.session.id);
+                    user.save();
+                }
                 res.json({username: req.session.user});
             }else{
                 res.status(401).send("HTTP 401: Unauthorized, invalid password");
