@@ -1,13 +1,11 @@
 const express = require('express');
-const cookieParser = require('cookie-parser')
-const session = require('express-session')
-const bcrypt = require('bcrypt');
-const saltRounds = 10;
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 const port = 3000;
-const secret = 'superdupersecret'
+const secret = 'superdupersecret';
 
 
 // MISC FUNCTIONS
@@ -216,12 +214,34 @@ app.get('/user/:username/acceptfriend', function(req, res){
     }
 });
 
+app.get('/user/:username/cancelfriend', function(req, res){
+//reject friendrequest
+    if( req.logUser.friendreq.includes(req.reqUser.username)){
+        
+        var friendIndex = req.logUser.friendreq.indexOf(req.reqUser.username);
+        req.logUser.friendreq.splice(friendIndex, 1);
+
+        req.logUser.save();
+
+        res.send(req.logUser.username + " and " + req.reqUser.username + " have cancelled friend request");
+    }else if (req.reqUser.friendreq.includes(req.logUser.username)){
+        var friendIndex = req.reqUser.friendreq.indexOf(req.logUser.username);
+        req.reqUser.friendreq.splice(friendIndex, 1);
+        req.reqUser.save();
+
+        res.send(req.logUser.username + " and " + req.reqUser.username + " have cancelled friend request");
+    }else{
+        res.send("friend request does not exist");
+    }
+});
+
 app.get('/home', function(req, res){
 //test page
     User.findOne({sessions : req.session.id }, function(err, logUser){
         if(!logUser){
             res.status(401).send("HTTP 401: Unauthorized, please log in");
         }else{
+            console.log(logUser)
             res.send(logUser.username)
         }
     });
@@ -265,13 +285,17 @@ app.get('/logout', function(req, res){
     // delete session cookie from database
     User.findOne( { sessions: req.session.id }, 
         function(err, user){
-        console.log(user.sessions)
-        var index = user.sessions.indexOf(req.session.id)
-        user.sessions.splice(index, 1)
-        user.save();
-        console.log(user.sessions)
-        req.session.destroy();
-        res.send("Logged out")
+        if(!user){
+            res.send("Not logged in")
+        }else{
+            console.log(user.sessions)
+            var index = user.sessions.indexOf(req.session.id)
+            user.sessions.splice(index, 1)
+            user.save();
+            console.log(user.sessions)
+            req.session.destroy();
+            res.send("Logged out")
+        }
     });
 });
 

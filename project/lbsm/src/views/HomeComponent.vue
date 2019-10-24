@@ -4,9 +4,11 @@
             <NavBarComponent/>
         </div>
         <div id="home">        
-            <h1>Welcome {{data}}! </h1>
+            <h1>Welcome {{username}}! </h1>
         </div>
-           <PostAreaComponent v-bind:data="data"/> 
+        <div>
+           <PostAreaComponent v-bind:username="username"/> 
+        </div>
         <div>
             <ul>
                 <li id="postMessages" v-for="post in messages">
@@ -14,12 +16,16 @@
                 </li>
             </ul>
         </div>
+        <div>
+            <FriendsListComponent />
+        </div>
     </div>
 </template>
 
 <script>
 import NavBarComponent from '@/components/NavBarComponent.vue'
 import PostAreaComponent from '@/components/PostAreaComponent.vue'
+import FriendsListComponent from '@/views/FriendsListComponent.vue';
 
 export default {
     name: 'home',
@@ -27,11 +33,12 @@ export default {
     components: {
         NavBarComponent,
         PostAreaComponent,
+        FriendsListComponent,
     },
 
     data() {
         return {
-            data: '',
+            username: '',
             messages: []
         };
     },
@@ -55,7 +62,7 @@ export default {
 
             request.done(function (data) {
                 //console.log( data);
-                dataObject.data = data
+                dataObject.username = data
             });
             
             request.fail(function () {

@@ -78,3 +78,20 @@ async friendEventhandler() {
     });
 }
 
+async getAllUsers() {
+    var dataObject = this;
+    var request = $.ajax({ 
+    type: 'GET',
+    url: "http://127.0.0.1:3000/users", 
+    xhrFields: {withCredentials: true}
+    });
+
+    request.done(function (data) {
+        console.log(data);
+    });
+    
+    request.fail(function (statustext) {
+        console.log("request failed with: ", statustext);
+        dataObject.$router.replace({name: "login"})
+    });
+}

@@ -6,10 +6,12 @@ import BootstrapVue from 'bootstrap-vue';
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
-import LoginComponent from './views/LoginComponent.vue';
-import HomeComponent from './views/HomeComponent.vue';
-import SignUpComponent from './views/SignUpComponent.vue';
-import FriendsListComponent from './views/FriendsListComponent.vue';
+import LoginComponent from '@/views/LoginComponent.vue';
+import HomeComponent from '@/views/HomeComponent.vue';
+import SignUpComponent from '@/views/SignUpComponent.vue';
+import FriendsListComponent from '@/views/FriendsListComponent.vue';
+import SearchListComponent from '@/views/SearchListComponent.vue';
+import UserTemplateComponent from '@/views/UserTemplateComponent.vue';
 
 Vue.use(VueRouter);
 Vue.use(BootstrapVue);
@@ -43,9 +45,22 @@ const router = new VueRouter
           path: '/friends',
           name: 'friends-list',
           component: FriendsListComponent
-        }
+        },
+        {
+          path: '/users',
+          name: 'search-list',
+          component: SearchListComponent
+        },
+        {
+          path: '/user/:username',
+          name: 'user-template',
+          component: UserTemplateComponent, 
+          props: true
+        },
     ]
 })
+
+Vue.config.productionTip = false
 
 window.app = new Vue({
     router,

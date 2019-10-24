@@ -8,7 +8,7 @@
                 rows="3"
                 max-rows="6"
             ></b-form-textarea>
-            <b-button type="submit" variant="primary">Post</b-button>
+            <b-button id="post-button" type="submit" variant="primary">Post</b-button>
             <!--
             <pre class="mt-3 mb-0">{{ text }} </pre>
             -->
@@ -21,7 +21,7 @@ export default {
     name: "post-area",
     
     props: {
-        data: String
+        username: String,
     },
     
     data() {
@@ -46,7 +46,7 @@ export default {
             console.log(this.data) 
             var request = $.ajax({ 
             type: 'POST',
-            url: "http://127.0.0.1:3000/user/" + this.data + "/post", 
+            url: "http://127.0.0.1:3000/user/" + this.username + "/post", 
             data: {
                 text: this.text,
             },
@@ -54,9 +54,13 @@ export default {
             });
 
             request.done(function( data ) {
-                //console.log("IM INSIDE DONE IN POSTAREA:", data.text)
                 dataObject.$root.$emit("postAreaListener", data.text)
                 dataObject.text = ""
+            });
+
+            request.fail(function (statustext) {
+                console.log("request failed with: ", statustext);
+                dataObject.$router.replace({name: "login"})
             });
         },
         onSubmit(evt) {
@@ -75,5 +79,9 @@ export default {
     margin-left: 30%;
     margin-right: 30%;
     margin-top: 0%;
+}
+#post-button {
+    margin-left: 0%;
+    margin-top: 2%;
 }
 </style>
