@@ -110,7 +110,7 @@ app.get('/users', function(req, res){
 
 app.get('/user/:username', function(req, res){
 //specific users page
-    if(req.reqUser.friends.includes(req.logUser.username)){
+    if(req.reqUser.friends.includes(req.logUser.username) || req.reqUser.username === req.logUser.username){
         res.json({to: req.reqUser.postsTo, from: req.reqUser.postsFrom})
     }else{
         res.send("you are not friends with " + req.reqUser.username)
@@ -122,23 +122,24 @@ app.get('/user/:username/status', function(req, res){
     if(req.reqUser.friends.includes(req.logUser.username)){
         res.send("friends")
     }else if (req.reqUser.friendreq.includes(req.logUser.username)){
-        res.send("pending requsest them")
+        res.send("pending request them")
     }else if (req.logUser.friendreq.includes(req.reqUser.username)){
-        res.send("pending requsest you")
+        res.send("pending request you")
+    }else if (req.logUser.username === req.reqUser.username){
+        res.send("you")
     }else{
-        res.send("not friends")
+        res.send("no relation")
     }
 });
 
 app.post('/user/:username/post', function(req, res){
 //specific users page
     var d = new Date
-    console.log(d.getTime());
     var newPost = { 
         poster: req.logUser.username,
         postee: req.reqUser.username,
         text: req.body.text,
-        date: d.getTime() 
+        date: d.toDateString() 
     }
     req.reqUser.postsTo.push(newPost)
     req.logUser.postsFrom.push(newPost)
@@ -186,13 +187,15 @@ app.get('/user/:username/removefriend', function(req, res){
     res.send("success")
 });
 
-app.get('/user/:username/friendrequests', function(req, res){
+app.get('/friendrequests', function(req, res){
 //specific users incoming friendrequests
-    if (req.reqUser.username === req.logUser.username){
-        res.send(req.reqUser.friendreq);
-    }else{
-        res.send("You cannot see other users friend requests");
-    }
+    User.findOne({sessions : req.session.id }, function(err, logUser){
+        if(!logUser){
+            res.status(401).send("HTTP 401: Unauthorized, please log in");
+        }else{
+            res.send(logUser.friendreq);
+        }
+    });
 });
 
 app.get('/user/:username/acceptfriend', function(req, res){
@@ -241,7 +244,7 @@ app.get('/home', function(req, res){
         if(!logUser){
             res.status(401).send("HTTP 401: Unauthorized, please log in");
         }else{
-            console.log(logUser)
+            console.log("Home page of user: "logUser)
             res.send(logUser.username)
         }
     });
@@ -258,12 +261,10 @@ app.get('/unauthourize', function(req, res){
 
 app.post('/login', function(req, res){
     //login
-    console.log("request body: ",req.body);
     User.findOne({username : req.body.username }, function(err, user){
         if (err) throw err;
-        console.log(user)
 
-        if (user != null){
+        if (user){
             if(req.body.password === user.password){
                 req.session.user = user.username
                 if (!user.sessions.includes(req.session.id)){
@@ -288,11 +289,9 @@ app.get('/logout', function(req, res){
         if(!user){
             res.send("Not logged in")
         }else{
-            console.log(user.sessions)
             var index = user.sessions.indexOf(req.session.id)
             user.sessions.splice(index, 1)
             user.save();
-            console.log(user.sessions)
             req.session.destroy();
             res.send("Logged out")
         }
@@ -301,8 +300,6 @@ app.get('/logout', function(req, res){
 
 app.post('/register', function(req, res){
     //register a new user
-    console.log(req.body)
-    console.log(req.url)
     if (req.body.email === '' || req.body.username === '' || req.body.password === '' ) {
         res.status(401).send("HTTP 401: Unauthorized, invalid password");
     }else {
@@ -310,11 +307,7 @@ app.post('/register', function(req, res){
             if (err) throw err;
     
             if (user == null){
-                //The hashing step could be moved to frontend for extra security
-                    //bcrypt.hash(req.body.password, encSalt, function(err, hash){
-                console.log("password: ", req.body.password);
                 var newUser = new User({username: req.body.username,
-                    // use hash instead of req.body.password here
                     password: req.body.password,
                     email: req.body.email,
                     sessions: [],
@@ -343,7 +336,7 @@ app.get('/cleardatabase', function(req, res){
     });
 
     res.status(200).send("Cleared database");
-    console.log("Cleared database");
+    console.log("Database cleared");
 });
 
 app.get('/validauth', function(req, res){

@@ -6,10 +6,11 @@
         <div>
             <b-form-input v-model="searchText" placeholder="Search for a user"></b-form-input>
         </div>
-        <div v-for="user in filterUsers">
-            <ul>
+        <div >
+            <ul v-for="user in filterUsers">
                 <li>
                     <router-link v-bind:to="{ name: 'user-template', params: {username: user}}"> {{user}} </router-link>
+                    <FriendHandlerButtonsComponent v-bind:username="user"/>
                 </li>
             </ul>
         </div>
@@ -18,12 +19,14 @@
 
 <script>
 import NavBarComponent from '@/components/NavBarComponent.vue'
+import FriendHandlerButtonsComponent from '@/components/FriendHandlerButtonsComponent.vue'
 
 export default {
     name: "search-list",
 
     components: {
         NavBarComponent,
+        FriendHandlerButtonsComponent,
     },
     data() {
         return{
@@ -42,7 +45,6 @@ export default {
     },
     mounted() {
         this.getAll()
-        
     },
     methods: {
         async getAll() {
@@ -56,24 +58,6 @@ export default {
             request.done(function (data) {
                 console.log(data);
                 dataObject.userList = data;
-            });
-            
-            request.fail(function (statustext) {
-                console.log("request failed with: ", statustext);
-                dataObject.$router.replace({name: "login"})
-            });
-        },
-        async checkFriendStatus(username) {
-            var dataObject = this;
-            var request = $.ajax({ 
-            type: 'GET',
-            url: "http://127.0.0.1:3000/user/" + username + "/status", 
-            xhrFields: {withCredentials: true}
-            });
-
-            request.done(function (data) {
-                console.log(data);
-                return data;
             });
             
             request.fail(function (statustext) {

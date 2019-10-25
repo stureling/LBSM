@@ -43,7 +43,7 @@ export default {
 
         async postMessage() {     
             var dataObject = this
-            console.log(this.data) 
+            console.log(this.username) 
             var request = $.ajax({ 
             type: 'POST',
             url: "http://127.0.0.1:3000/user/" + this.username + "/post", 

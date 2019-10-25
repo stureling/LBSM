@@ -7,17 +7,16 @@
             <h1>Welcome {{username}}! </h1>
         </div>
         <div>
-           <PostAreaComponent v-bind:username="username"/> 
+           <PostAreaComponent v-if="username !== ''" v-bind:username="username"/> 
         </div>
         <div>
-            <ul>
-                <li id="postMessages" v-for="post in messages">
-                    {{ post }}
-                </li>
-            </ul>
+           <PostListComponent v-if="username !== ''" v-bind:username="username"/> 
         </div>
         <div>
-            <FriendsListComponent />
+            <FriendsListComponent v-if="username !== ''" v-bind:username="username" />
+        </div>
+        <div>
+            <FriendReqListComponent v-if="username !== ''" />
         </div>
     </div>
 </template>
@@ -25,7 +24,9 @@
 <script>
 import NavBarComponent from '@/components/NavBarComponent.vue'
 import PostAreaComponent from '@/components/PostAreaComponent.vue'
-import FriendsListComponent from '@/views/FriendsListComponent.vue';
+import PostListComponent from '@/components/PostListComponent.vue'
+import FriendsListComponent from '@/components/FriendsListComponent.vue';
+import FriendReqListComponent from '@/components/FriendReqListComponent.vue';
 
 export default {
     name: 'home',
@@ -33,7 +34,9 @@ export default {
     components: {
         NavBarComponent,
         PostAreaComponent,
+        PostListComponent,
         FriendsListComponent,
+        FriendReqListComponent,
     },
 
     data() {
