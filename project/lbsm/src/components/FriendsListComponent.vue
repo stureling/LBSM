@@ -1,9 +1,11 @@
 <template>
 	<div id="friends-list">
+		<h1 id="title"> Friends </h1>
 		<ul>
-			<h1> Friends </h1>
 			<li v-for="friend in friendsList">
-                <router-link v-bind:to="{ name: 'user-template', params: {username: friend}}"> {{friend}} </router-link>
+				<h4>
+					<router-link class="friend-link" v-bind:to="{ name: 'user-template', params: {username: friend}}" > {{friend}} </router-link>
+				</h4>
 			</li>
 		</ul>
 	</div>
@@ -20,13 +22,17 @@ export default {
 			friendsList: [],
 		}
 	},
+	
 	mounted() {
 		this.getFriends()
+	},
+
+	watch: {
+		'$route': 'getFriends'
 	},
 	methods: {
 		async getFriends() {
 			var dataObject = this;
-			console.log(this.username)
 			var request = $.ajax({ 
 			type: 'GET',
 			url: "http://127.0.0.1:3000/user/" + this.username + "/friends", 
@@ -46,6 +52,19 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+ul {
+	list-style-type: none; 
+	padding: 0px;
+	padding-left: 30%
+}
+#friends-list {
+}
+#title{
+	text-align: center;
+	color: yellow;
+}
+.friend-link{
+	color: white;
+}
 </style>

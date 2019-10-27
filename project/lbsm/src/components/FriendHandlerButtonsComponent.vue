@@ -23,6 +23,9 @@
 				Add friend
 			</b-button>
 		</div>
+		<div v-if="you">
+			<p>(you)</p>
+		</div>
 	</div> 
 </template>
 
@@ -44,7 +47,12 @@ export default {
     mounted() {
 		console.log("buttons for ",this.username)
 		this.handleResponse()
-    },
+	},
+	watch: {
+		username: function(){
+			this.handleResponse()
+		}
+	},
 	methods: {
 		async handleResponse() {
 			var dataObject = this;

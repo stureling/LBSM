@@ -7,11 +7,10 @@
                 placeholder="What's happening?"
                 rows="3"
                 max-rows="6"
+                :change="checker"
             ></b-form-textarea>
-            <b-button id="post-button" type="submit" variant="primary">Post</b-button>
-            <!--
-            <pre class="mt-3 mb-0">{{ text }} </pre>
-            -->
+            <b-button :disabled="toDisable" id="post-button" type="submit" variant="primary">Post</b-button>
+
         </b-form>
     </div>
 </template>
@@ -23,12 +22,23 @@ export default {
     props: {
         username: String,
     },
-    
+
     data() {
         return {
+            toDisable: false,
             text: '',
             maxLength: 140 
         }
+    },
+    
+    computed: {
+        checker(){
+            if (this.text.length < 1){
+                this.toDisable = true
+            } else {
+                this.toDisable = false
+            }
+        },
     },
 
     /*
@@ -76,9 +86,10 @@ export default {
 
 <style>
 #post-area {
-    margin-left: 30%;
-    margin-right: 30%;
-    margin-top: 0%;
+    padding: 10px;
+}
+#text-area {
+
 }
 #post-button {
     margin-left: 0%;

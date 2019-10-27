@@ -4,8 +4,10 @@
 			<NavBarComponent/>
 		</div>
 		<div id="user-template">        
-			<h1>Welcome to the page of {{username}}! You are {{logUser}} </h1>
+			<h1>Welcome to the page of {{username}}! </h1>
 		</div>  
+		<div> <FriendHandlerButtonsComponent v-bind:username="username" />
+		</div>
 		<div>
 		   <PostAreaComponent  v-bind:username="username"/>
 		</div>
@@ -14,9 +16,6 @@
 		</div>
 		<div>
 			<FriendsListComponent  v-bind:username="username" />
-		</div>
-		<div>
-			<FriendHandlerButtonsComponent v-bind:username="username" />
 		</div>
 	</div>
 	<div v-else>
@@ -63,9 +62,10 @@ export default {
         this.checkFriendship();
 		var dataObject = this
 		this.$root.$on("postAreaListener", function(message){
-
 			dataObject.newPost = message
-			console.log("new post caught in user template: ", dataObject.newPost);
+		})
+		this.$root.$on("updateFriend", function(){
+
 		})
 		
 	},

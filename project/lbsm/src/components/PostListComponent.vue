@@ -1,24 +1,29 @@
 <template>
-	<div id="post-list">
-		<ul>
-			<h1> Posts made to {{username}} </h1>
-			<li v-for="post in to">
-				Posted by: {{post.poster}}
-				<br>
-				Posted to: {{post.postee}}
-				<br>
-				Date: {{post.date}}
-				<br>
-				{{post.text}}
-			</li>
-			<h1> Posts made by {{username}} </h1>
-			<li v-for="post in from">
-				{{post}}
+	<div id="post-list" >
+		<b-button id="toggle-button" :pressed.sync="postsBy" variant="secondary">Toggle post source</b-button>
+		<ul v-if="!postsBy">
+			<h1 class="postlist-title">Timeline</h1>
+			<li v-for="post in to" class="post">
+				<div class="meta-bar">
+					<p class="meta-text" >Posted by:</p> {{post.poster}}
+					<span class="date"> <p class="meta-text" >Date:</p> {{post.date}}</span>
+				</div>
+				<h5 class="post-text">
+					{{post.text}}
+				</h5>
 			</li>
 		</ul>
-	</div>
-</template>
-
+		<ul v-if="postsBy">
+			<h1 class="postlist-title"> Posts made by {{username}} </h1>
+			<li v-for="post in from" class="post">
+				<div class="meta-bar">
+					<p class="meta-text" >Posted to:</p> {{post.postee}}
+					<span class="date"> <p class="meta-text" >Date:</p> {{post.date}}</span>
+				</div>
+				<h5 class="post-text">
+					{{post.text}}
+				</h5>
+			</li>
 		</ul>
 	</div>
 </template>
@@ -34,6 +39,7 @@ export default {
 		return {
 			to: [],
 			from: [],
+			postsBy: false,
 		}
 	},
 	watch: {
@@ -77,11 +83,47 @@ export default {
 			request.fail(function (statustext) {
 				console.log("request failed with: ", statustext);
 			});
-		}
+		},
 	},
 }
 </script>
 
-<style>
+<style scoped>
+.meta-text{
+	display: inline;
+	color: yellow;
+}
+.meta-bar{
 
-</style>
+}
+#post-list{
+	background-color: teal;
+	width: 100%;
+	float: left;
+	padding: 20px;
+}
+.date{
+	float: right;
+}
+.post-text{
+	overflow-wrap: break-word;
+	display: inline;
+	margin: 5px;
+	color: white;
+}
+.post{
+	border: solid 2px;
+	border-color: lightgray;
+	border-radius: 15px;
+	padding: 5px;
+	margin: 5px;
+	color: white;
+}
+.postlist-title{
+	color: yellow;
+}
+ul{
+	list-style-type: none;
+	padding: 0;
+}
+</style>>

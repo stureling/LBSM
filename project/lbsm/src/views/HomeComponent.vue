@@ -6,16 +6,16 @@
         <div id="home">        
             <h1>Welcome {{username}}! </h1>
         </div>
-        <div>
-           <PostAreaComponent  v-bind:username="username"/> 
+        <div id="post">
+            <div id="post-area">
+                <PostAreaComponent  v-bind:username="username"/> 
+            </div>
+            <div id="post-list">
+                <PostListComponent v-bind:newPost="newPost" v-bind:username="username"/> 
+            </div>
         </div>
-        <div>
-           <PostListComponent v-bind:newPost="newPost" v-bind:username="username"/> 
-        </div>
-        <div>
+        <div id="friend-lists">
             <FriendsListComponent  v-bind:username="username" />
-        </div>
-        <div>
             <FriendReqListComponent  />
         </div>
     </div>
@@ -86,6 +86,23 @@ export default {
 }
 #postMessages {
     margin-left: 30%;
+}
+#friend-lists {
+    background-color: teal;
+    border: 0px;
+    border-radius: 15px;
+    max-width: 20%;
+    margin-right: 1%;
+    float: right
+}
+#post-list {
+    border: 0px;
+    max-width: 80%;
+    border-radius: 15px;
+}
+#post {
+    max-width: 60%;
+    margin-left: 10pt;
 }
 </style>
 

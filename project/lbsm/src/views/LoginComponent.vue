@@ -111,6 +111,7 @@ export default {
 #login {
     width: 500px;
     border: 1px solid #CCCCCC;
+    border-radius: 25px;
     background-color: #FFFFFF;
     margin: auto;
     padding: 20px;

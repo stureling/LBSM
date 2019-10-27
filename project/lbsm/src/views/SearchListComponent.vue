@@ -4,12 +4,14 @@
             <NavBarComponent />
         </div>
         <div>
-            <b-form-input v-model="searchText" placeholder="Search for a user"></b-form-input>
+            <b-form-input v-model="searchText"  placeholder="Search for a user"></b-form-input>
         </div>
         <div >
-            <ul v-for="user in filterUsers">
-                <li>
-                    <router-link v-bind:to="{ name: 'user-template', params: {username: user}}"> {{user}} </router-link>
+            <ul>
+                <li v-for="user in filterUsers">
+                    <h3>
+                        <router-link v-bind:to="{ name: 'user-template', params: {username: user}}"> {{user}} </router-link>
+                    </h3>
                     <FriendHandlerButtonsComponent v-bind:username="user"/>
                 </li>
             </ul>
@@ -36,6 +38,8 @@ export default {
     },
     computed: {
         filterUsers(){
+            this.computed = false
+            this.computed = true
             var dataObject = this;
             return dataObject.userList.filter(function(element){
                 console.log(element.match(dataObject.searchText))
