@@ -1,53 +1,60 @@
 <template>
-    <div id="sign-up">
-        <b-form @submit="onSubmit" v-if="show">
-            <h1>Sign Up</h1>
-            
-            <b-form-group
-                id="input-group-1"
-                label="Email address:"
-                label-for="input-1"
-                description="We'll never share your email with anyone else."
-            >
-                <b-form-input
-                    id="input-1"
-                    v-model="form.email"
-                    type="email"
-                    placeholder="Enter email"
-                    required
-                ></b-form-input>
-            </b-form-group>
+    <div>
+        <div id="title">
+            <h1>
+                Please sign-up below!
+            </h1>  
+        </div>
+        <div id="sign-up">
+            <b-form @submit="onSubmit" v-if="show">
+                <h1>Sign-up</h1>
+                
+                <b-form-group
+                    id="input-group-1"
+                    label="Email address:"
+                    label-for="input-1"
+                    description="We'll never share your email with anyone else."
+                >
+                    <b-form-input
+                        id="input-1"
+                        v-model="form.email"
+                        type="email"
+                        placeholder="Enter email"
+                        required
+                    ></b-form-input>
+                </b-form-group>
 
-            <b-form-group id="input-group-2" label="Your Username:" label-for="input-2">
-                <b-form-input
-                    id="input-2"
-                    v-model="form.username"
-                    type="text"
-                    placeholder="Enter username"
-                    required
-                ></b-form-input>
-            </b-form-group>
+                <b-form-group id="input-group-2" label="Your Username:" label-for="input-2">
+                    <b-form-input
+                        id="input-2"
+                        v-model="form.username"
+                        type="text"
+                        placeholder="Enter username"
+                        required
+                    ></b-form-input>
+                </b-form-group>
 
-            <b-form-group id="input-group-3" label="Password:" label-for="input-3">
-                <b-form-input
-                    id="input-3"
-                    v-model="form.password"
-                    type="password"
-                    placeholder="Enter Password"
-                    required
-                ></b-form-input>
-            </b-form-group>
+                <b-form-group id="input-group-3" label="Password:" label-for="input-3">
+                    <b-form-input
+                        id="input-3"
+                        v-model="form.password"
+                        type="password"
+                        placeholder="Enter Password"
+                        required
+                    ></b-form-input>
+                </b-form-group>
 
-            
-            <div>        
-                <p v-if="inDataBase" class="error"> Username already taken</p>
-                <b-button type="submit" variant="primary">Sign-up</b-button>
-            
-                <p>Already a user? 
-                    <router-link to="/login">Click here to login.</router-link> 
-                </p>
-            </div>
-        </b-form>
+                
+                <div>        
+                    <p v-if="inDataBase" class="error"> Username already taken</p>
+                    <b-button type="submit" variant="primary">Sign-up</b-button>
+                
+                    <p>Already a user? 
+                        <router-link to="/login">Click here to login.</router-link> 
+                    </p>
+                </div>
+            </b-form>
+        </div>
     </div>
 </template>
 
@@ -116,12 +123,19 @@ export default {
 </script>
 
 <style scoped>
+#title {
+    width: 500px;
+    margin-top: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 100px;
+    padding: 20px;
+}
 #sign-up {
     width: 500px;
     border: 1px solid #CCCCCC;
     background-color: #FFFFFF;
     margin: auto;
-    margin-top: 200px;
     padding: 20px;
 }
 

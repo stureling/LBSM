@@ -1,5 +1,9 @@
 <template>
-    <div id="login">
+    <div>
+        <h1 id="title">
+                Welcome to lbsm!
+        </h1>
+        <div id="login">
         <b-form @submit="onSubmit" v-if="show">
             <h1>Login</h1>
             
@@ -32,6 +36,7 @@
                 </p>
             </div>
         </b-form>
+        </div>
     </div>
 </template>
 
@@ -94,12 +99,20 @@ export default {
 </script>
 
 <style scoped>
+#title {
+    width: 500px;
+    margin-top: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 100px;
+    padding: 20px;
+
+}
 #login {
     width: 500px;
     border: 1px solid #CCCCCC;
     background-color: #FFFFFF;
     margin: auto;
-    margin-top: 200px;
     padding: 20px;
 }
 .error {

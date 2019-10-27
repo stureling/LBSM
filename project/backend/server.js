@@ -244,7 +244,7 @@ app.get('/home', function(req, res){
         if(!logUser){
             res.status(401).send("HTTP 401: Unauthorized, please log in");
         }else{
-            console.log("Home page of user: "logUser)
+            console.log("Home page of user: ", logUser)
             res.send(logUser.username)
         }
     });
