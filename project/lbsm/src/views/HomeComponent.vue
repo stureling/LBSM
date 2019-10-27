@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="username !== ''">
         <div>
             <NavBarComponent/>
         </div>
@@ -7,17 +7,19 @@
             <h1>Welcome {{username}}! </h1>
         </div>
         <div>
-           <PostAreaComponent v-if="username !== ''" v-bind:username="username"/> 
+           <PostAreaComponent  v-bind:username="username"/> 
         </div>
         <div>
-           <PostListComponent v-if="username !== ''" v-bind:username="username"/> 
+           <PostListComponent v-bind:newPost="newPost" v-bind:username="username"/> 
         </div>
         <div>
-            <FriendsListComponent v-if="username !== ''" v-bind:username="username" />
+            <FriendsListComponent  v-bind:username="username" />
         </div>
         <div>
-            <FriendReqListComponent v-if="username !== ''" />
+            <FriendReqListComponent  />
         </div>
+    </div>
+    <div v-else>
     </div>
 </template>
 
@@ -42,16 +44,16 @@ export default {
     data() {
         return {
             username: '',
+            newPost: {},
             messages: []
         };
     },
     mounted() { 
         this.getData();
-        var dataThis = this
+        var dataObject = this
         this.$root.$on("postAreaListener", function(message){
-            console.log("IM IN HOME: ", message)
-            dataThis.messages.unshift(message)
-            console.log(dataThis.messages)
+            dataObject.newPost = message
+			console.log("new post caught in home: ", dataObject.newPost);
         })
     },
     methods: {

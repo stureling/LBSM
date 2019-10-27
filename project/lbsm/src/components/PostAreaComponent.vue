@@ -54,7 +54,7 @@ export default {
             });
 
             request.done(function( data ) {
-                dataObject.$root.$emit("postAreaListener", data.text)
+                dataObject.$root.$emit("postAreaListener", data)
                 dataObject.text = ""
             });
 
