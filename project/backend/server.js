@@ -19,7 +19,7 @@ var db = mongoose.connection;
 
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
-    console.log("Mongodb connection established");
+console.log("Mongodb connection established");
 });
 
 var Schema = mongoose.Schema;
@@ -141,11 +141,17 @@ app.post('/user/:username/post', function(req, res){
         text: req.body.text,
         date: d.toDateString() 
     }
-    req.reqUser.postsTo.push(newPost)
-    req.logUser.postsFrom.push(newPost)
-
+    if(req.reqUser.username === req.logUser.username){
+    req.logUser.postsFrom.unshift(newPost)
+    req.logUser.postsTo.unshift(newPost)
+    req.logUser.save()
+    }else{
+    req.logUser.postsFrom.unshift(newPost)
+    req.reqUser.postsTo.unshift(newPost)
     req.logUser.save()
     req.reqUser.save()
+    }
+
 
     res.send(newPost)
 });
@@ -244,7 +250,7 @@ app.get('/home', function(req, res){
         if(!logUser){
             res.status(401).send("HTTP 401: Unauthorized, please log in");
         }else{
-            console.log("Home page of user: "logUser)
+            console.log("Home page of user: ", logUser)
             res.send(logUser.username)
         }
     });

@@ -28,6 +28,7 @@ export default {
 	name: "post-list",
 	props: {
 		username: String,
+		newPost: Object,
 	},
 	data() {
 		return {
@@ -35,10 +36,28 @@ export default {
 			from: [],
 		}
 	},
+	watch: {
+		newPost: function (newVal, oldVal){
+			console.log("value of test changed")
+			console.log("old value: ", oldVal)
+			console.log("new value: ", newVal)
+			this.addNewPost(newVal)
+
+		},
+	},
 	mounted() {
 		this.getPosts()
 	},
 	methods: {
+		addNewPost(post){
+			if(post.poster === this.username){
+				this.from.unshift(post);
+				this.to.unshift(post);
+				console.log("to: ",this.to)
+			}else{
+				this.to.unshift(post);
+			}
+		},
 		async getPosts() {
 			var dataObject = this;
 			console.log(this.username)
@@ -52,6 +71,7 @@ export default {
 				console.log(data);
 				dataObject.to = data.to;
 				dataObject.from = data.from;
+				dataObject.test += 1;
 			});
 
 			request.fail(function (statustext) {

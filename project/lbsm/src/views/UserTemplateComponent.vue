@@ -4,13 +4,13 @@
 			<NavBarComponent/>
 		</div>
 		<div id="user-template">        
-			<h1>Welcome to the page of {{username}}! </h1>
+			<h1>Welcome to the page of {{username}}! You are {{logUser}} </h1>
 		</div>  
 		<div>
 		   <PostAreaComponent  v-bind:username="username"/>
 		</div>
 		<div>
-		   <PostListComponent   v-bind:username="username"/>
+		   <PostListComponent v-bind:newPost="newPost" v-bind:username="username"/>
 		</div>
 		<div>
 			<FriendsListComponent  v-bind:username="username" />
@@ -51,23 +51,43 @@ export default {
 	data() {
 		return {
 			data: '',
+			newPost: {},
 			friend: false,
 			username: this.$route.params.username,
+			logUser: '',
 		};
 	},
 	mounted() { 
 		console.log("THESE ARE THE PARAMS" , this.$route.params)
-        this.checkFriendship()
+        this.getLogUser();
+        this.checkFriendship();
 		var dataObject = this
 		this.$root.$on("postAreaListener", function(message){
 
-            //TODO Fix the autoupdate of messages
-			console.log("IM IN HOME: ", message)
-			dataObject.messages.unshift(message)
+			dataObject.newPost = message
+			console.log("new post caught in user template: ", dataObject.newPost);
 		})
+		
 	},
 	methods: {
-        checkFriendship(){
+        async getLogUser(){
+			var dataObject = this
+			var request = $.ajax({ 
+				type: 'GET',
+				url: "http://127.0.0.1:3000/home", 
+				xhrFields: {withCredentials: true}
+			});
+
+			request.done(function (data) {
+				//console.log( data);
+				dataObject.logUser = data
+			});
+			
+			request.fail(function () {
+				dataObject.$router.replace({name: "login"})
+			});
+		},
+        async checkFriendship(){
 			var dataObject = this;
 			var request = $.ajax({ 
 				type: 'GET',
