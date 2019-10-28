@@ -5,7 +5,7 @@
         </h1>
         <div id="login">
         <b-form @submit="onSubmit" v-if="show">
-            <h1>Login</h1>
+            <h1 id="login-label">Login</h1>
             
             <b-form-group id="input-group-1" label="Your Username:" label-for="input-1">
                 <b-form-input
@@ -29,9 +29,9 @@
  
             <div>       
                 <p v-if="failure" class="error"> Wrong username or password! Please try again</p>
-                <b-button type="submit" variant="primary">Login</b-button>
+                <b-button id="login-button" type="submit" variant="primary">Login</b-button>
             
-                <p>Not a user? 
+                <p id="non-user">Not a user? 
                     <router-link to="/sign-up">Click here to sign-up.</router-link> 
                 </p>
             </div>
@@ -107,15 +107,38 @@ export default {
     margin-bottom: 100px;
     padding: 20px;
     text-align: center;
+    color: yellow;
+    text-shadow: 2px 2px black;
 
 }
 #login {
     width: 500px;
     border: 1px solid #CCCCCC;
     border-radius: 25px;
-    background-color: #FFFFFF;
+    background-color: teal;
     margin: auto;
     padding: 20px;
+}
+#login-label {
+    color:yellow;
+    text-shadow: 2px 2px black;
+}
+#input-group-1{
+    color: white;
+    text-shadow: 1px 1px black;
+}
+
+#input-group-2{
+    color: white;
+    text-shadow: 1px 1px black;
+}
+#non-user {
+    color: white;
+    text-shadow: 1px 1px black;
+}
+#login-button {
+    color: white;
+    text-shadow: 1px 1px black;
 }
 .error {
     border:  20px solid red;

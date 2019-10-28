@@ -124,6 +124,7 @@ export default {
 }
 #welcome-title {
     color:yellow;
+    text-shadow: 2px 2px black;
 }
 #friend-lists {
     background-color: teal;
