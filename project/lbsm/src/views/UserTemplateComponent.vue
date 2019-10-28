@@ -1,5 +1,5 @@
 <template>
-	<div v-if="friend">
+	<div v-if="friend && !notFound">
 		<div>
 			<NavBarComponent/>
 		</div>
@@ -21,7 +21,7 @@
 			<FriendsListComponent  v-bind:username="username" />
 		</div>
 	</div>
-	<div v-else>
+	<div v-else-if="!notFound">
 		<div>
 			<NavBarComponent/>
 		</div>
@@ -30,6 +30,17 @@
 				<FriendHandlerButtonsComponent v-bind:username="username" />
 			</h1>
 		</div>
+	</div>
+	<div v-else>
+		<div>
+			<NavBarComponent/>
+		</div>
+		<div id="user-template">        
+			<h1 id="welcome-title">
+				User not found!
+			</h1>
+		</div>
+
 	</div>
 </template>
 
@@ -58,6 +69,7 @@ export default {
 			friend: false,
 			username: this.$route.params.username,
 			logUser: '',
+			notFound: false,
 		};
 	},
 	mounted() { 
@@ -107,9 +119,16 @@ export default {
                     dataObject.friend = false;    
                 }
             });
-			request.fail(function () {
-				console.log( "request failed");
-				dataObject.$router.replace({name: "login"})
+			request.fail(function (statustext) {
+				console.log( "request failed", statustext.status);
+				if(statustext.status == 404){
+					dataObject.notFound = true;
+				}else if (statustext.status == 401){
+					dataObject.$router.replace({name: "login"})
+				}else{
+					dataObject.$router.replace({name: "users"})
+				}
+
 			});
         },
 	}

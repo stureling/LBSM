@@ -7,10 +7,6 @@ const mongoose = require('mongoose');
 const port = 3000;
 const secret = 'superdupersecret';
 
-
-// MISC FUNCTIONS
-
-
 // MONGOOSE CONFIGURATION
 
 mongoose.connect('mongodb://localhost/lbsm', { useUnifiedTopology: true, useNewUrlParser : true });
