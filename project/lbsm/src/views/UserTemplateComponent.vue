@@ -68,8 +68,8 @@ export default {
 		this.$root.$on("postAreaListener", function(message){
 			dataObject.newPost = message
 		})
-		this.$root.$on("updateFriend", function(){
-
+		this.$root.$on("friendUpdate", function(){
+			dataObject.checkFriendship()
 		})
 		
 	},

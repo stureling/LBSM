@@ -114,6 +114,7 @@ export default {
 			request.done(function (data) {
 				console.log("add request done, res: ", data)
 				dataObject.handleResponse()
+				dataObject.buttonPress()
 			});
 			
 			request.fail(function () {
@@ -133,6 +134,7 @@ export default {
 			request.done(function (data) {
 				console.log("remove request done, res: ", data)
 				dataObject.handleResponse()
+				dataObject.buttonPress()
 			});
 			
 			request.fail(function () {
@@ -152,6 +154,7 @@ export default {
 			request.done(function (data) {
 				console.log("accept request done, res: ", data)
 				dataObject.handleResponse()
+				dataObject.buttonPress()
 			});
 			
 			request.fail(function () {
@@ -171,6 +174,7 @@ export default {
 			request.done(function (data) {
 				console.log("cancel request done, res: ", data)
 				dataObject.handleResponse()
+				dataObject.buttonPress()
 			});
 			
 			request.fail(function () {
@@ -178,6 +182,9 @@ export default {
 				dataObject.$router.replace({name: "login"})
 			});
 		},
+		buttonPress(){
+			this.$root.$emit("friendUpdate")
+		}
 	}
 }
 </script>

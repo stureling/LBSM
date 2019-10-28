@@ -106,6 +106,7 @@ export default {
     margin-right: auto;
     margin-bottom: 100px;
     padding: 20px;
+    text-align: center;
 
 }
 #login {

@@ -26,6 +26,9 @@ export default {
 	},
 	mounted() {
 		this.getFriends()
+		this.$root.$on("friendUpdate", function(){
+			dataObject.getFriends()
+		})
 	},
 	methods: {
 		async getFriends() {
