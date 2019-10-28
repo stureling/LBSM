@@ -1,13 +1,13 @@
 <template>
     <div>
-        <div id="title">
-            <h1>
+        <div>
+            <h1 id="title">
                 Please sign-up below!
             </h1>  
         </div>
         <div id="sign-up">
             <b-form @submit="onSubmit" v-if="show">
-                <h1>Sign-up</h1>
+                <h1 id="sign-up-label">Sign-up</h1>
                 
                 <b-form-group
                     id="input-group-1"
@@ -24,7 +24,11 @@
                     ></b-form-input>
                 </b-form-group>
 
-                <b-form-group id="input-group-2" label="Your Username:" label-for="input-2">
+                <b-form-group 
+                    id="input-group-2" 
+                    label="Your Username:" 
+                    label-for="input-2"
+                >
                     <b-form-input
                         id="input-2"
                         v-model="form.username"
@@ -34,7 +38,11 @@
                     ></b-form-input>
                 </b-form-group>
 
-                <b-form-group id="input-group-3" label="Password:" label-for="input-3">
+                <b-form-group 
+                    id="input-group-3" 
+                    label="Password:" 
+                    label-for="input-3"
+                >
                     <b-form-input
                         id="input-3"
                         v-model="form.password"
@@ -47,9 +55,9 @@
                 
                 <div>        
                     <p v-if="inDataBase" class="error"> Username already taken</p>
-                    <b-button type="submit" variant="primary">Sign-up</b-button>
+                    <b-button id="sign-up-button" type="submit" variant="primary">Sign-up</b-button>
                 
-                    <p>Already a user? 
+                    <p id="already-user">Already a user? 
                         <router-link to="/login">Click here to login.</router-link> 
                     </p>
                 </div>
@@ -130,14 +138,42 @@ export default {
     margin-right: auto;
     margin-bottom: 100px;
     padding: 20px;
+    text-align: center;
+    color: yellow;
+    text-shadow: 2px 2px black;
 }
 #sign-up {
     width: 500px;
     border: 1px solid #CCCCCC;
     border-radius: 25px;
-    background-color: #FFFFFF;
+    background-color: teal;
     margin: auto;
     padding: 20px;
+}
+
+#sign-up-label {
+    color:yellow;
+    text-shadow: 2px 2px black;
+}
+#input-group-1{
+    color: white;
+    text-shadow: 1px 1px black;
+}
+#input-group-2{
+    color: white;
+    text-shadow: 1px 1px black;
+}
+#input-group-3{
+    color: white;
+    text-shadow: 1px 1px black;
+}
+#already-user {
+    color: white;
+    text-shadow: 1px 1px black;
+}
+#sign-up-button {
+    color: white;
+    text-shadow: 1px 1px black;
 }
 
 .error {

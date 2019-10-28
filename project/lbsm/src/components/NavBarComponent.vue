@@ -55,7 +55,8 @@ export default {
 
 <style>
 #nav-bar{
-background-color: teal;
+    background-color: teal;
+    text-shadow: 2px 2px black;
 }
 .navbar-link{
     color: white;

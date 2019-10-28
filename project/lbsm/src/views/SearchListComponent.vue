@@ -10,7 +10,7 @@
             <ul>
                 <li v-for="user in filterUsers">
                     <h3>
-                        <router-link v-bind:to="{ name: 'user-template', params: {username: user}}"> {{user}} </router-link>
+                        <router-link  class="users-in-list" v-bind:to="{ name: 'user-template', params: {username: user}}"> {{user}} </router-link>
                     </h3>
                     <FriendHandlerButtonsComponent v-bind:username="user"/>
                 </li>
@@ -74,5 +74,13 @@ export default {
 </script>
 
 <style>
-
+ul {
+	list-style-type: none; 
+	padding: 0px;
+	margin-left: 1%
+}
+.users-in-list {
+    color: yellow;
+    text-shadow: 2px 2px black;
+}
 </style>

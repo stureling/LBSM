@@ -62,6 +62,7 @@ ul {
 	text-align: left;
 	margin-left: 3%;
 	color: yellow;
+    text-shadow: 2px 2px black;
 }
 .friend-link{
 	color: white;

@@ -91,6 +91,7 @@ export default {
 <style scoped>
 .meta-text{
 	display: inline;
+    text-shadow: 1px 1px black;
 	color: yellow;
 }
 .meta-bar{
@@ -121,6 +122,7 @@ export default {
 }
 .postlist-title{
 	color: yellow;
+    text-shadow: 2px 2px black;
 	overflow-wrap:break-word;
 }
 ul{
