@@ -38,17 +38,16 @@ export default {
     },
     computed: {
         filterUsers(){
-            this.computed = false
-            this.computed = true
+            this.computed = false;
+            this.computed = true;
             var dataObject = this;
             return dataObject.userList.filter(function(element){
-                console.log(element.match(dataObject.searchText))
                 return element.match(dataObject.searchText);
             });
         },
     },
     mounted() {
-        this.getAll()
+        this.getAll();
     },
     methods: {
         async getAll() {
@@ -60,13 +59,11 @@ export default {
             });
 
             request.done(function (data) {
-                console.log(data);
                 dataObject.userList = data;
             });
             
             request.fail(function (statustext) {
-                console.log("request failed with: ", statustext);
-                dataObject.$router.replace({name: "login"})
+                dataObject.$router.replace({name: "login"});
             });
         },
     }

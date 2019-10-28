@@ -31,10 +31,12 @@
 <script>
 export default {
 	name: "post-list",
+
 	props: {
 		username: String,
 		newPost: Object,
 	},
+
 	data() {
 		return {
 			to: [],
@@ -42,31 +44,28 @@ export default {
 			postsBy: false,
 		}
 	},
-	watch: {
-		newPost: function (newVal, oldVal){
-			console.log("value of test changed")
-			console.log("old value: ", oldVal)
-			console.log("new value: ", newVal)
-			this.addNewPost(newVal)
 
+	watch: {
+		newPost: function (newVal){
+			this.addNewPost(newVal);
 		},
 	},
+
 	mounted() {
-		this.getPosts()
+		this.getPosts();
 	},
+
 	methods: {
 		addNewPost(post){
 			if(post.poster === this.username){
 				this.from.unshift(post);
 				this.to.unshift(post);
-				console.log("to: ",this.to)
 			}else{
 				this.to.unshift(post);
 			}
 		},
 		async getPosts() {
 			var dataObject = this;
-			console.log(this.username)
 			var request = $.ajax({ 
 			type: 'GET',
 			url: "http://127.0.0.1:3000/user/" + this.username, 
@@ -74,7 +73,6 @@ export default {
 			});
 
 			request.done(function (data) {
-				console.log(data);
 				dataObject.to = data.to;
 				dataObject.from = data.from;
 				dataObject.test += 1;
@@ -89,19 +87,20 @@ export default {
 </script>
 
 <style scoped>
-.meta-text{
-	display: inline;
-    text-shadow: 1px 1px black;
-	color: yellow;
-}
-.meta-bar{
-
+ul{
+	list-style-type: none;
+	padding: 0;
 }
 #post-list{
 	background-color: teal;
 	width: 100%;
 	float: left;
 	padding: 20px;
+}
+.meta-text{
+	display: inline;
+    text-shadow: 1px 1px black;
+	color: yellow;
 }
 .date{
 	float: right;
@@ -124,9 +123,5 @@ export default {
 	color: yellow;
     text-shadow: 2px 2px black;
 	overflow-wrap:break-word;
-}
-ul{
-	list-style-type: none;
-	padding: 0;
 }
 </style>>

@@ -9,7 +9,10 @@
                 max-rows="6"
                 :change="checker"
             ></b-form-textarea>
-            <b-button :disabled="toDisable" id="post-button" type="submit" variant="primary">Post</b-button>
+            <span>
+                <b-button :disabled="toDisable" id="post-button" type="submit" variant="primary">Post</b-button>
+                <pre id="counter"> Char count: {{decrementCharCount}}</pre>
+            </span>
 
         </b-form>
     </div>
@@ -32,28 +35,21 @@ export default {
     },
     
     computed: {
+        decrementCharCount() {
+            return this.maxLength - this.text.length;
+        },
         checker(){
-            if (this.text.length < 1){
-                this.toDisable = true
+            if (this.text.length < 1 || this.text.length > 140){
+                this.toDisable = true;
             } else {
-                this.toDisable = false
+                this.toDisable = false;
             }
         },
     },
 
-    /*
-    computed: {
-        decrementCharCount() {
-            this.text
-            return this.maxLength -= 1;
-        },
-    },
-    */
     methods: {
-
         async postMessage() {     
-            var dataObject = this
-            console.log(this.username) 
+            var dataObject = this;
             var request = $.ajax({ 
             type: 'POST',
             url: "http://127.0.0.1:3000/user/" + this.username + "/post", 
@@ -64,13 +60,12 @@ export default {
             });
 
             request.done(function( data ) {
-                dataObject.$root.$emit("postAreaListener", data)
-                dataObject.text = ""
+                dataObject.$root.$emit("postAreaListener", data);
+                dataObject.text = "";
             });
 
             request.fail(function (statustext) {
-                console.log("request failed with: ", statustext);
-                dataObject.$router.replace({name: "login"})
+                dataObject.$router.replace({name: "login"});
             });
         },
         onSubmit(evt) {
@@ -83,15 +78,15 @@ export default {
 }
 </script>
 
-
 <style>
 #post-area {
     padding: 10px;
 }
-#text-area {
-
+#counter{
+    float: right;
 }
 #post-button {
+    float:left;
     margin-left: 0%;
     margin-top: 2%;
 }

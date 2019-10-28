@@ -28,11 +28,11 @@
             </b-form-group>
  
             <div>       
-                <p v-if="failure" class="error"> Wrong username or password! Please try again</p>
+                <p v-if="failure" id="error"> Wrong username or password! Please try again</p>
                 <b-button id="login-button" type="submit" variant="primary">Login</b-button>
             
                 <p id="non-user">Not a user? 
-                    <router-link to="/sign-up">Click here to sign-up.</router-link> 
+                    <router-link id="signup-link" to="/sign-up">Click here to sign-up.</router-link> 
                 </p>
             </div>
         </b-form>
@@ -56,17 +56,17 @@ export default {
     methods: {
         wrongInput() {
             // Reset our form values
-            this.form.username = ''
-            this.form.password = ''
-            this.show = false
+            this.form.username = '';
+            this.form.password = '';
+            this.show = false;
             this.$nextTick(() => {
-                this.show = true
+                this.show = true;
             })
-            this.failure = true
+            this.failure = true;
         },
         async login() {
 
-            var dataObject = this
+            var dataObject = this;
 
             var request = $.ajax({ 
             type: 'POST',
@@ -91,7 +91,6 @@ export default {
         
         onSubmit(evt) {
             evt.preventDefault();
-            //alert(JSON.stringify(this))
             this.login();
         },
     }
@@ -140,8 +139,13 @@ export default {
     color: white;
     text-shadow: 1px 1px black;
 }
-.error {
-    border:  20px solid red;
+#signup-link{
+    color: yellow;
+}
+#error {
     padding: 30px;
+    color: yellow;
+    text-align: center;
+    text-shadow: 1px 1px black;
 }
 </style>

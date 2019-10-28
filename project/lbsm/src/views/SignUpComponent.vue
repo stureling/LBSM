@@ -54,11 +54,11 @@
 
                 
                 <div>        
-                    <p v-if="inDataBase" class="error"> Username already taken</p>
+                    <h4 v-if="inDataBase" id="error"> Username already taken</h4>
                     <b-button id="sign-up-button" type="submit" variant="primary">Sign-up</b-button>
                 
                     <p id="already-user">Already a user? 
-                        <router-link to="/login">Click here to login.</router-link> 
+                        <router-link id="login-link" to="/login">Click here to login.</router-link> 
                     </p>
                 </div>
             </b-form>
@@ -85,18 +85,18 @@ export default {
         
         inDB() {
             // Reset our form values
-            this.form.email = ''
-            this.form.username = ''
-            this.form.password = ''
-            this.show = false
+            this.form.email = '';
+            this.form.username = '';
+            this.form.password = '';
+            this.show = false;
             this.$nextTick(() => {
-                this.show = true
+                this.show = true;
             })
-            this.inDataBase = true
+            this.inDataBase = true;
         },
 
         async signUp() {
-            var dataObject = this
+            var dataObject = this;
             var request = $.ajax({ 
             type: 'POST',
             url: "http://127.0.0.1:3000/register", 
@@ -108,7 +108,6 @@ export default {
             xhrFields: {withCredentials: true}
             });
             request.done(function( data ) {
-                //console.log(data);
                 if(data === "user already in database") {
                     dataObject.inDB();
                 } else {
@@ -175,9 +174,13 @@ export default {
     color: white;
     text-shadow: 1px 1px black;
 }
-
-.error {
-    border:  20px solid red;
+#error {
     padding: 30px;
+    color: yellow;
+    text-align: center;
+    text-shadow: 1px 1px black;
+}
+#login-link{
+    color: yellow;
 }
 </style>

@@ -27,9 +27,11 @@
 <script>
 export default {
     name: "nav-bar",
+
     data() {
         return {};
     },
+
     methods: {
         async logOut() {
             var dataObject = this;
@@ -39,19 +41,17 @@ export default {
                 xhrFields: { withCredentials: true }
             });
 
-            request.done(function() {
-                //console.log(data);
+            request.done(function(data) {
+                console.log(data);
             });
 
-            request.fail(function() {
-                //console.log("JAG SA ATT DU SUGER", statustext);
-                dataObject.$router.replace({ name: "login" });
+            request.fail(function(statusText) {
+                console.log(statusText);
             });
         },
     }
-};
+}
 </script>
-
 
 <style>
 #nav-bar{
@@ -61,9 +61,7 @@ export default {
 .navbar-link{
     color: white;
 }
-
 #brand{
     margin-left: 0.45%;
 }
-
 </style>

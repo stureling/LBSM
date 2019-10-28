@@ -183,9 +183,6 @@ app.get('/user/:username/removefriend', function(req, res){
     req.reqUser.friends.splice(friendIndex, 1);
     req.reqUser.save();
 
-    console.log(req.logUser.username,
-        " are no longer friends with ", 
-        req.reqUser.username);
     res.send("success")
 });
 
@@ -246,7 +243,6 @@ app.get('/home', function(req, res){
         if(!logUser){
             res.status(401).send("HTTP 401: Unauthorized, please log in");
         }else{
-            console.log("Home page of user: ", logUser)
             res.send(logUser.username)
         }
     });
@@ -319,7 +315,6 @@ app.post('/register', function(req, res){
                 });
                 newUser.save(function(err, newUser){
                     if (err) return console.error(err);
-                    console.log("registered user ", newUser)
                 });
                 res.send("user registered")
                     //});
@@ -334,11 +329,9 @@ app.post('/register', function(req, res){
 app.get('/cleardatabase', function(req, res){
     //temporary path used for testing, remove this when not running in dev mode
     User.deleteMany({}, function(err) { 
-       console.log('User collection removed') 
     });
 
     res.status(200).send("Cleared database");
-    console.log("Database cleared");
 });
 
 app.get('/validauth', function(req, res){

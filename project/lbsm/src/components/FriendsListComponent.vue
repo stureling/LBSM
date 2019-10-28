@@ -14,9 +14,11 @@
 <script>
 export default {
 	name: "friends-list",
+
 	props: {
 		username: String,
 	},
+
 	data() {
 		return {
 			friendsList: [],
@@ -24,15 +26,16 @@ export default {
 	},
 	
 	mounted() {
-		this.getFriends()
+		this.getFriends();
 		this.$root.$on("friendUpdate", function(){
-			dataObject.getFriends()
-		})
+			dataObject.getFriends();
+		});
 	},
 
 	watch: {
 		'$route': 'getFriends'
 	},
+	
 	methods: {
 		async getFriends() {
 			var dataObject = this;
@@ -43,7 +46,6 @@ export default {
 			});
 
 			request.done(function (data) {
-				console.log(data);
 				dataObject.friendsList = data;
 			});
 
@@ -60,8 +62,6 @@ ul {
 	list-style-type: none; 
 	padding: 0px;
 	margin-left: 3%
-}
-#friends-list {
 }
 #title{
 	text-align: left;

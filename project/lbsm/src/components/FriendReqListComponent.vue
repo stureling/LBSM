@@ -16,21 +16,24 @@
 import FriendHandlerButtonsComponent from '@/components/FriendHandlerButtonsComponent.vue'
 export default {
 	name: "friendreqs-list",
+	
     components: {
 		FriendHandlerButtonsComponent,
 	},
+
 	data() {
 		return {
 			friendReqList: [],
 		}
 	},
+
 	mounted() {
-		this.getFriends()
+		this.getFriends();
 	},
+	
 	methods: {
 		async getFriends() {
 			var dataObject = this;
-			console.log(this.username)
 			var request = $.ajax({ 
 			type: 'GET',
 			url: "http://127.0.0.1:3000/friendrequests", 
@@ -38,7 +41,6 @@ export default {
 			});
 
 			request.done(function (data) {
-				console.log(data);
 				dataObject.friendReqList = data;
 			});
 
@@ -51,8 +53,6 @@ export default {
 </script>
 
 <style scoped>
-#friendreqs-list{
-}
 ul {
 	list-style-type: none; 
 	padding: 0px;

@@ -15,15 +15,6 @@ export default {
 </script>
 
 <style>  
-
-#app {
-    
-}
-.header {
-    display: flex;
-    justify-content: space-between;
-    margin-right: 2%;
-}
 body {
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
     background-color:lightblue;
@@ -33,5 +24,9 @@ h1 {
     padding: 0;
     margin-top: 0;
 }
-
+.header {
+    display: flex;
+    justify-content: space-between;
+    margin-right: 2%;
+}
 </style>

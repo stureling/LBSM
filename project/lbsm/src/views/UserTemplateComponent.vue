@@ -73,21 +73,20 @@ export default {
 		};
 	},
 	mounted() { 
-		console.log("THESE ARE THE PARAMS" , this.$route.params)
         this.getLogUser();
         this.checkFriendship();
-		var dataObject = this
+		var dataObject = this;
 		this.$root.$on("postAreaListener", function(message){
-			dataObject.newPost = message
+			dataObject.newPost = message;
 		})
 		this.$root.$on("friendUpdate", function(){
-			dataObject.checkFriendship()
+			dataObject.checkFriendship();
 		})
 		
 	},
 	methods: {
         async getLogUser(){
-			var dataObject = this
+			var dataObject = this;
 			var request = $.ajax({ 
 				type: 'GET',
 				url: "http://127.0.0.1:3000/home", 
@@ -95,12 +94,11 @@ export default {
 			});
 
 			request.done(function (data) {
-				//console.log( data);
-				dataObject.logUser = data
+				dataObject.logUser = data;
 			});
 			
 			request.fail(function () {
-				dataObject.$router.replace({name: "login"})
+				dataObject.$router.replace({name: "login"});
 			});
 		},
         async checkFriendship(){
@@ -120,13 +118,12 @@ export default {
                 }
             });
 			request.fail(function (statustext) {
-				console.log( "request failed", statustext.status);
 				if(statustext.status == 404){
 					dataObject.notFound = true;
 				}else if (statustext.status == 401){
-					dataObject.$router.replace({name: "login"})
+					dataObject.$router.replace({name: "login"});
 				}else{
-					dataObject.$router.replace({name: "users"})
+					dataObject.$router.replace({name: "users"});
 				}
 
 			});
@@ -166,7 +163,5 @@ export default {
     max-width: 80%;
     border-radius: 15px;
     margin-left: 7pt;
-}
-#remove-friend-button {
 }
 </style>

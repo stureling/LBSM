@@ -51,8 +51,7 @@ export default {
         this.getData();
         var dataObject = this
         this.$root.$on("postAreaListener", function(message){
-            dataObject.newPost = message
-			console.log("new post caught in home: ", dataObject.newPost);
+            dataObject.newPost = message;
         })
     },
     methods: {
@@ -65,13 +64,11 @@ export default {
             });
 
             request.done(function (data) {
-                //console.log( data);
-                dataObject.username = data
+                dataObject.username = data;
             });
             
             request.fail(function () {
-                //console.log("JAG SA ATT DU SUGER", statustext);
-                dataObject.$router.replace({name: "login"})
+                dataObject.$router.replace({name: "login"});
             });
         },
     }
