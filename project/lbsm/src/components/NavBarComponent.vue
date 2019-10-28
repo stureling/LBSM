@@ -2,7 +2,7 @@
 <template>
     <div id="nav-bar">
         <b-navbar toggleable="lg" type="dark" >
-        <b-navbar-brand  href="http://localhost:8080/#/home" >LBSM</b-navbar-brand>
+        <b-navbar-brand id="brand" href="http://localhost:8080/#/home" >LBSM</b-navbar-brand>
 
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
@@ -59,6 +59,10 @@ background-color: teal;
 }
 .navbar-link{
     color: white;
+}
+
+#brand{
+    margin-left: 0.45%;
 }
 
 </style>

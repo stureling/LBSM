@@ -4,17 +4,20 @@
 			<NavBarComponent/>
 		</div>
 		<div id="user-template">        
-			<h1>Welcome to the page of {{username}}! </h1>
+			<h1 id="welcome-title">Welcome to the page of {{username}}! 
+				<FriendHandlerButtonsComponent v-bind:username="username" />
+			</h1>
 		</div>  
-		<div> <FriendHandlerButtonsComponent v-bind:username="username" />
+			
+		<div id="post">
+			<div id="post-area">
+			   <PostAreaComponent  v-bind:username="username"/>
+			</div>
+			<div id="post-list">
+			   <PostListComponent v-bind:newPost="newPost" v-bind:username="username"/>
+			</div>
 		</div>
-		<div>
-		   <PostAreaComponent  v-bind:username="username"/>
-		</div>
-		<div>
-		   <PostListComponent v-bind:newPost="newPost" v-bind:username="username"/>
-		</div>
-		<div>
+		<div id="friend-lists">
 			<FriendsListComponent  v-bind:username="username" />
 		</div>
 	</div>
@@ -22,9 +25,10 @@
 		<div>
 			<NavBarComponent/>
 		</div>
-		<h1>You are not friends with {{username}}</h1>
-		<div>
-			<FriendHandlerButtonsComponent v-bind:username="username" />
+		<div id="user-template">        
+			<h1 id="welcome-title">You are not friends with {{username}}! 
+				<FriendHandlerButtonsComponent v-bind:username="username" />
+			</h1>
 		</div>
 	</div>
 </template>
@@ -113,15 +117,36 @@ export default {
 </script>
 
 <style scoped>
-#home {
-	margin-left: 1%;
-	margin-top: 1%;
+
+#user-template {
+    margin-left: 16pt;
+    margin-top: 1%;
 }
-#post-messages {
-	margin-left: 30%;
+#welcome-title {
+    color:yellow;
 }
-div {
-	border-color: red;
-	border: 3px
+#friend-lists {
+    background-color: teal;
+	padding: 0.5%;
+    border: 0px;
+    border-radius: 15px;
+    max-width: 20%;
+    margin-right: 1%;
+    float: right
+}
+#post {
+    max-width: 80%;
+}
+#post-area {
+    max-width: 81%;
+    
+}
+#post-list {
+    border: 0px;
+    max-width: 80%;
+    border-radius: 15px;
+    margin-left: 7pt;
+}
+#remove-friend-button {
 }
 </style>

@@ -4,7 +4,7 @@
             <NavBarComponent/>
         </div>
         <div id="home">        
-            <h1>Welcome {{username}}! </h1>
+            <h1 id="welcome-title">Welcome {{username}}! </h1>
         </div>
         <div id="post">
             <div id="post-area">
@@ -45,7 +45,6 @@ export default {
         return {
             username: '',
             newPost: {},
-            messages: []
         };
     },
     mounted() { 
@@ -81,28 +80,33 @@ export default {
 
 <style scoped>
 #home {
-    margin-left: 1%;
+    margin-left: 16pt;
     margin-top: 1%;
 }
-#postMessages {
-    margin-left: 30%;
+#welcome-title {
+    color:yellow;
 }
 #friend-lists {
     background-color: teal;
     border: 0px;
+    padding: 0.5%;
     border-radius: 15px;
     max-width: 20%;
     margin-right: 1%;
     float: right
 }
+#post {
+    max-width: 80%;
+}
+#post-area {
+    max-width: 81%;
+    
+}
 #post-list {
     border: 0px;
     max-width: 80%;
     border-radius: 15px;
-}
-#post {
-    max-width: 60%;
-    margin-left: 10pt;
+    margin-left: 7pt;
 }
 </style>
 

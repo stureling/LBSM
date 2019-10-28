@@ -121,6 +121,7 @@ export default {
 }
 .postlist-title{
 	color: yellow;
+	overflow-wrap:break-word;
 }
 ul{
 	list-style-type: none;

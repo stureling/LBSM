@@ -1,9 +1,11 @@
 <template>
 	<div id="friendreqs-list">
+		<h2 id="title"> Friend requests </h2>
 		<ul>
-			<h3> Friend requests </h3>
 			<li v-for="friend in friendReqList">
-                <router-link v-bind:to="{ name: 'user-template', params: {username: friend}}"> {{friend}} </router-link>
+				<h4>
+                	<router-link class="friend-link" v-bind:to="{ name: 'user-template', params: {username: friend}}"> {{friend}} </router-link>
+				</h4>
 				<FriendHandlerButtonsComponent v-bind:username="friend"/>
 			</li>
 		</ul>
@@ -50,6 +52,18 @@ export default {
 
 <style scoped>
 #friendreqs-list{
-	background-color: hotpink;
+}
+ul {
+	list-style-type: none; 
+	padding: 0px;
+	margin-left: 3%;
+}
+#title{
+	text-align: left;
+	margin-left: 3%;
+	color: yellow;
+}
+.friend-link{
+	color: white;
 }
 </style>

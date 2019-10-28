@@ -80,7 +80,7 @@ export default {
 
             request.done(function( data ) {
                 if(data.username == dataObject.form.username) {
-                    dataObject.$router.replace({ name: "home" });
+                    dataObject.$router.push({ name: "home" });
                 }
             });
 

@@ -1,6 +1,6 @@
 <template>
 	<div id="friends-list">
-		<h1 id="title"> Friends </h1>
+		<h2 id="title"> Friends </h2>
 		<ul>
 			<li v-for="friend in friendsList">
 				<h4>
@@ -56,12 +56,13 @@ export default {
 ul {
 	list-style-type: none; 
 	padding: 0px;
-	padding-left: 30%
+	margin-left: 3%
 }
 #friends-list {
 }
 #title{
-	text-align: center;
+	text-align: left;
+	margin-left: 3%;
 	color: yellow;
 }
 .friend-link{
