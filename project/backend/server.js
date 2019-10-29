@@ -35,9 +35,7 @@ var UserSchema = new Schema({
 var User = mongoose.model('User', UserSchema)
 
 // EXPRESS MIDDLEWARE INITIALIZATION
-
 var app = express();
-//app.use(cookieParser(secret))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true}));
 app.use(express.json());
@@ -68,7 +66,7 @@ app.param('username', function (req, res, next, user) {
         }else{
             User.findOne({username: user}, function(err, reqUser){
                 if(!reqUser){ 
-                    res.status(404).send("User not found");
+                    res.status(404).send("user not found");
                 }else{
                     req.reqUser = reqUser;
                     req.logUser = logUser;
@@ -158,7 +156,7 @@ app.get('/user/:username/friends', function(req, res){
         req.reqUser.username === req.logUser.username ){
         res.send(req.reqUser.friends);
     }else{
-        res.send("Client not in friend list");
+        res.send("client not in friend list");
     }
 });
 
@@ -183,7 +181,7 @@ app.get('/user/:username/removefriend', function(req, res){
     req.reqUser.friends.splice(friendIndex, 1);
     req.reqUser.save();
 
-    res.send("success")
+    res.send(req.logUser.username +" removed " + req.reqUser.username + " from friends" )
 });
 
 app.get('/friendrequests', function(req, res){
@@ -217,7 +215,7 @@ app.get('/user/:username/acceptfriend', function(req, res){
 });
 
 app.get('/user/:username/cancelfriend', function(req, res){
-//reject friendrequest
+//reject and cancel friendrequest
     if( req.logUser.friendreq.includes(req.reqUser.username)){
         
         var friendIndex = req.logUser.friendreq.indexOf(req.reqUser.username);
@@ -238,22 +236,13 @@ app.get('/user/:username/cancelfriend', function(req, res){
 });
 
 app.get('/home', function(req, res){
-//test page
+//returns the logged in users username to be used as a :username param in subsequent calls
     User.findOne({sessions : req.session.id }, function(err, logUser){
         if(!logUser){
             res.status(401).send("HTTP 401: Unauthorized, please log in");
         }else{
             res.send(logUser.username)
         }
-    });
-});
-
-app.get('/unauthourize', function(req, res){
-//test page
-    User.findOneAndUpdate( { sessions: req.session.id }, 
-        { $set:{ sessions: [req.session.id]}}, 
-        function(err, user){
-        res.send("Logged out all other sessions")
     });
 });
 
@@ -271,10 +260,10 @@ app.post('/login', function(req, res){
                 }
                 res.json({username: req.session.user});
             }else{
-                res.status(401).send("HTTP 401: Unauthorized, invalid password");
+                res.status(401).send("invalid password");
             }
         }else{
-            res.status(401).send("HTTP 401: Unauthorized, invalid username");
+            res.status(401).send("invalid username");
         }
     })
     
@@ -285,13 +274,13 @@ app.get('/logout', function(req, res){
     User.findOne( { sessions: req.session.id }, 
         function(err, user){
         if(!user){
-            res.send("Not logged in")
+            res.send("not logged in")
         }else{
             var index = user.sessions.indexOf(req.session.id)
             user.sessions.splice(index, 1)
             user.save();
             req.session.destroy();
-            res.send("Logged out")
+            res.send("logged out")
         }
     });
 });
@@ -299,7 +288,7 @@ app.get('/logout', function(req, res){
 app.post('/register', function(req, res){
     //register a new user
     if (req.body.email === '' || req.body.username === '' || req.body.password === '' ) {
-        res.status(401).send("HTTP 401: Unauthorized, invalid password");
+        res.status(401).send("HTTP 401: Unauthorized, a required field is empty");
     }else {
         User.findOne({username : req.body.username }, function(err, user){
             if (err) throw err;
@@ -332,17 +321,6 @@ app.get('/cleardatabase', function(req, res){
     });
 
     res.status(200).send("Cleared database");
-});
-
-app.get('/validauth', function(req, res){
-//check if user is logged in
-    User.findOne({sessions : req.session.id }, function(err, user){
-        if(!user){
-            res.status(200).send("false");
-        }else{
-            res.status(200).send("true")
-        }
-    });
 });
 
 app.listen(port, () => console.log(`Express: App listening on port ${port}!`));
