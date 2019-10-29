@@ -4,7 +4,7 @@
             <NavBarComponent />
         </div>
         <div>
-            <b-form-input v-model="searchText"  placeholder="Search for a user"></b-form-input>
+            <b-form-input id="search-bar" v-model="searchText"  placeholder="Search for a user"></b-form-input>
         </div>
         <div >
             <ul>

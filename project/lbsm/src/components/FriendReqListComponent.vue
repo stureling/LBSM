@@ -4,7 +4,7 @@
 		<ul>
 			<li v-for="friend in friendReqList">
 				<h4>
-                	<router-link class="friend-link" v-bind:to="{ name: 'user-template', params: {username: friend}}"> {{friend}} </router-link>
+					<router-link class="friend-link" v-bind:to="{ name: 'user-template', params: {username: friend}}"> {{friend}} </router-link>
 				</h4>
 				<FriendHandlerButtonsComponent v-bind:username="friend"/>
 			</li>
