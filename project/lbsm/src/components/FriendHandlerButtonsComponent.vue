@@ -1,27 +1,21 @@
 <template>
     <div>
-		<div v-if="!you && !friends && !pendingThem && pendingYou" id="answer-request">
-   			<b-button variant="success" v-on:click="acceptFriendReq()">
+		<div v-if="!you && !friends && !pendingThem && pendingYou">
+   			<b-button id="accept-req-btn" variant="success" v-on:click="acceptFriendReq()">
 				Accept request
 			</b-button>
-			<b-button variant="danger" v-on:click="cancelFriendReq()">
+			<b-button id="deny-req-btn" variant="danger" v-on:click="cancelFriendReq()">
 				Deny request
 			</b-button>
 		</div>
-		<div v-if="!you && !friends && pendingThem && !pendingYou" id="cancel-request">
-			<b-button variant="warning" v-on:click="cancelFriendReq()">
-				Cancel request
-			</b-button>
+		<div v-if="!you && !friends && pendingThem && !pendingYou">
+			<b-button id="cancel-req-btn" variant="warning" v-on:click="cancelFriendReq()">Cancel request</b-button>
 		</div>
-		<div v-if="!you && friends && !pendingThem && !pendingYou" id="remove-friend">
-			<b-button variant="danger" v-on:click="removeFriend()">
-				Remove friend
-			</b-button>
+		<div v-if="!you && friends && !pendingThem && !pendingYou">
+			<b-button id="rmv-friend-btn" variant="danger" v-on:click="removeFriend()">Remove friend</b-button>
 		</div>
-		<div v-if="!you && !friends && !pendingThem && !pendingYou" id="add-friend">
-			<b-button variant="primary" v-on:click="addFriend()">
-				Add friend
-			</b-button>
+		<div v-if="!you && !friends && !pendingThem && !pendingYou">
+			<b-button id="add-friend-btn" variant="primary" v-on:click="addFriend()">Add friend</b-button>
 		</div>
 		<div v-if="you">
 			<p>(you)</p>
