@@ -28,7 +28,7 @@
             </b-form-group>
  
             <div>       
-                <p v-if="failure" id="error"> Wrong username or password! Please try again</p>
+                <p v-if="failure" id="error">Wrong username or password! Please try again</p>
                 <b-button id="login-button" type="submit" variant="primary">Login</b-button>
             
                 <p id="non-user">Not a user? 

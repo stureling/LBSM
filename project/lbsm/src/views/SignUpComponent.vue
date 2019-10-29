@@ -54,7 +54,7 @@
 
                 
                 <div>        
-                    <h4 v-if="inDataBase" id="error"> Username already taken</h4>
+                    <h4 v-if="inDataBase" id="error">Username already taken</h4>
                     <b-button id="sign-up-button" type="submit" variant="primary">Sign-up</b-button>
                 
                     <p id="already-user">Already a user? 

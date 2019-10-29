@@ -1,6 +1,6 @@
 <template>
 	<div id="friends-list">
-		<h2 id="title"> Friends </h2>
+		<h2 id="friends-title"> Friends </h2>
 		<ul>
 			<li v-for="friend in friendsList">
 				<h4>
@@ -63,7 +63,7 @@ ul {
 	padding: 0px;
 	margin-left: 3%
 }
-#title{
+#friends-title{
 	text-align: left;
 	margin-left: 3%;
 	color: yellow;

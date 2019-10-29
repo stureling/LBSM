@@ -7,37 +7,18 @@ import unittest
 
 import urllib.request
 
+
 class FrontEndTests(unittest.TestCase):
-    def setUp(self):
-        self.browser = webdriver.Firefox()
-        self.browser.get('http://localhost:8080')
-        f = urllib.request.urlopen("http://localhost:3000/cleardatabase")
-        
-        browser = self.browser
-        # resgister_link is a list, therefore we have to take out the first element
-        register_link = browser.find_elements_by_id('signup-link')
-        register_link[0].click()      
-        
-        email = "hamody.mahir1998@gmail.com"
-        username = "moe"
-        password = "moe"
-        
-        email_box = browser.find_element_by_id('input-1')
-        username_box = browser.find_element_by_id('input-2')
-        password_box = browser.find_element_by_id('input-3')
-
-        email_box.send_keys(email)
-        username_box.send_keys(username)
-        password_box.send_keys(password)
-        
-        sign_up_button = browser.find_element_by_id('sign-up-button')
-        sign_up_button.click()
-
-        
+    
+    browser = webdriver.Firefox()
+    browser.get('http://localhost:8080')
     
     def test_001_register(self):
+        # Clear database
+        urllib.request.urlopen("http://localhost:3000/cleardatabase")
+
         browser = self.browser
-        # resgister_link is a list, therefore we have to take out the first element
+        # register_link is a list, therefore we have to take out the first element
         register_link = browser.find_elements_by_id('signup-link')
         register_link[0].click()      
         
@@ -58,38 +39,106 @@ class FrontEndTests(unittest.TestCase):
 
         # Check that we redirect correctly
         assert browser.current_url == 'http://localhost:8080/#/login'
-        
-    def test_002_login(self):
-        browser = self.browser
 
-        username = "moe"
-        password = "moe"
+        ################################ REGISTER simon ###################################
+        register_link = browser.find_elements_by_id('signup-link')
+        register_link[0].click()      
         
-        username_box = browser.find_element_by_id('input-1')
-        password_box = browser.find_element_by_id('input-2')
+        email = "simon.simon@gmail.com"
+        username = "simon"
+        password = "simon"
+        
+        email_box = browser.find_element_by_id('input-1')
+        username_box = browser.find_element_by_id('input-2')
+        password_box = browser.find_element_by_id('input-3')
 
+        email_box.send_keys(email)
         username_box.send_keys(username)
         password_box.send_keys(password)
         
-        sign_up_button = browser.find_element_by_id('login-button')
+        sign_up_button = browser.find_element_by_id('sign-up-button')
         sign_up_button.click()
-
-        # Check that we redirect correctly
-        assert browser.current_url == 'http://localhost:8080/#/home'
-
-    def test_003_logout(self):
-        self.test_002_login()
-        
-        browser = self.browser
-        logout_link = browser.find_element_by_id('logout-link')
-        logout_link.click()
 
         # Check that we redirect correctly
         assert browser.current_url == 'http://localhost:8080/#/login'
 
+        ############################### TRY to register simon again #######################
+        register_link = browser.find_elements_by_id('signup-link')
+        register_link[0].click()      
+        
+        email = "simon.simon@gmail.com"
+        username = "simon"
+        password = "simon"
+        
+        email_box = browser.find_element_by_id('input-1')
+        username_box = browser.find_element_by_id('input-2')
+        password_box = browser.find_element_by_id('input-3')
+
+        email_box.send_keys(email)
+        username_box.send_keys(username)
+        password_box.send_keys(password)
+        
+        sign_up_button = browser.find_element_by_id('sign-up-button')
+        sign_up_button.click()
+
+        # Check that we redirect correctly
+        assert browser.current_url == 'http://localhost:8080/#/sign-up'
+        assert 'Username already taken' in browser.page_source
+
+        ################################ REGISTER anna ####################################
+        email = "anna.anna@gmail.com"
+        username = "anna"
+        password = "anna"
+        
+        email_box = browser.find_element_by_id('input-1')
+        username_box = browser.find_element_by_id('input-2')
+        password_box = browser.find_element_by_id('input-3')
+
+        email_box.send_keys(email)
+        username_box.send_keys(username)
+        password_box.send_keys(password)
+        
+        sign_up_button = browser.find_element_by_id('sign-up-button')
+        sign_up_button.click()
+
+        # Check that we redirect correctly
+        assert browser.current_url == 'http://localhost:8080/#/login'
+ 
+    def test_002_login(self):
+        browser = self.browser
+
+        username_box = browser.find_element_by_id('input-1')
+        password_box = browser.find_element_by_id('input-2')
+
+        username = "moe"
+        password = "moe"
+        
+        username_box.send_keys(username)
+        password_box.send_keys(password)
+        
+        login_button = browser.find_element_by_id('login-button')
+        login_button.click()
+
+        # Check when input is wrong
+        assert browser.current_url == 'http://localhost:8080/#/login'
+        assert 'Wrong username or password! Please try again' in browser.page_source
+
+        username_box = browser.find_element_by_id('input-1')
+        password_box = browser.find_element_by_id('input-2')
+
+        username = "eric"
+        password = "eric"
+        
+        username_box.send_keys(username)
+        password_box.send_keys(password)
+        
+        login_button = browser.find_element_by_id('login-button')
+        login_button.click()
+
+        # Check when input is right and redirect correctly
+        assert browser.current_url == 'http://localhost:8080/#/home'
+        
     def test_004_search_and_add_friends(self):
-        self.test_001_register()
-        self.test_002_login()
         browser = self.browser
 
         friends_list_link = browser.find_element_by_id('friends-list-link')
@@ -97,9 +146,9 @@ class FrontEndTests(unittest.TestCase):
 
         # Search for friend
         search_bar = browser.find_element_by_id('search-bar')
-        search_bar.send_keys("eric")
+        search_bar.send_keys("anna")
 
-        browser.implicitly_wait(1)
+        browser.implicitly_wait(2)
         # Add friend through list search
         add_friend_btn = browser.find_element_by_id('add-friend-btn')
         add_friend_btn.click()
@@ -107,11 +156,60 @@ class FrontEndTests(unittest.TestCase):
         # Check if add friend button turned to a cancel request button
         assert "Cancel request" in browser.page_source
 
+    def test_005_accept_friend_req(self):
+        browser = self.browser
+
+        # Log out to answer request from friend
+        logout_link = browser.find_element_by_id('logout-link')
+        logout_link.click()
+
+        username_box = browser.find_element_by_id('input-1')
+        password_box = browser.find_element_by_id('input-2')
+
+        username = "anna"
+        password = "anna"
+        
+        username_box.send_keys(username)
+        password_box.send_keys(password)
+        
+        login_button = browser.find_element_by_id('login-button')
+        login_button.click()
+
+        # Add friend through friends search
+        add_friend_btn = browser.find_element_by_id('accept-req-btn')
+        add_friend_btn.click()
+
     """
-    def tearDown(self):
-        self.browser.quit()
+    def test_006_post_on_friends_wall(self):
+        browser = self.browser
+
+        # Log back in to user to continue testing
+        logout_link = browser.find_element_by_id('logout-link')
+        logout_link.click()
+
+        username_box = browser.find_element_by_id('input-1')
+        password_box = browser.find_element_by_id('input-2')
+
+        username = "eric"
+        password = "eric"
+        
+        username_box.send_keys(username)
+        password_box.send_keys(password)
+        
+        login_button = browser.find_element_by_id('login-button')
+        login_button.click()
     """
 
+    def test_999_logout(self):
+        browser = self.browser
+        logout_link = browser.find_element_by_id('logout-link')
+        logout_link.click()
+
+        # Check that we redirect correctly
+        assert browser.current_url == 'http://localhost:8080/#/login'
+        browser.quit()
+
+    
 if __name__ == "__main__":
     unittest.main()
 

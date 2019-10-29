@@ -1,6 +1,6 @@
 <template>
 	<div id="friendreqs-list">
-		<h2 id="title"> Friend requests </h2>
+		<h2 id="friend-req-title"> Friend requests </h2>
 		<ul>
 			<li v-for="friend in friendReqList">
 				<h4>
@@ -58,7 +58,7 @@ ul {
 	padding: 0px;
 	margin-left: 3%;
 }
-#title{
+#friend-req-title{
 	text-align: left;
 	margin-left: 3%;
 	color: yellow;
