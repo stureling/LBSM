@@ -26,9 +26,8 @@
 			<NavBarComponent/>
 		</div>
 		<div id="user-template">        
-			<h1 id="welcome-title">You are not friends with {{username}}! 
-				<FriendHandlerButtonsComponent v-bind:username="username" />
-			</h1>
+			<h1 id="welcome-title">You are not friends with {{username}}!</h1> 
+			<h1> <FriendHandlerButtonsComponent v-bind:username="username" /> </h1>
 		</div>
 	</div>
 	<div v-else>

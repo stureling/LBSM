@@ -7,7 +7,6 @@ import unittest
 
 import urllib.request
 
-
 class FrontEndTests(unittest.TestCase):
     
     browser = webdriver.Firefox()
@@ -215,7 +214,16 @@ class FrontEndTests(unittest.TestCase):
         # Check if the message has been posted
         assert message in browser.page_source
 
-    
+    def test_007_remove_friend(self):
+        browser = self.browser
+
+        remove_friend_btn = browser.find_element_by_id('rmv-friend-btn')
+        remove_friend_btn.click()
+
+        # Check that friend was removed succefully
+        assert "You are not friends with anna!" in browser.page_source
+        assert browser.find_element_by_id('add-friend-btn').text == "Add friend"
+
     def test_999_logout(self):
         browser = self.browser
         logout_link = browser.find_element_by_id('logout-link')
@@ -225,7 +233,6 @@ class FrontEndTests(unittest.TestCase):
         assert browser.current_url == 'http://localhost:8080/#/login'
         browser.quit()
 
-    
 if __name__ == "__main__":
     unittest.main()
 
