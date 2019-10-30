@@ -290,36 +290,28 @@ app.post('/register', function(req, res){
     if (req.body.email === '' || req.body.username === '' || req.body.password === '' ) {
         res.status(401).send("HTTP 401: Unauthorized, a required field is empty");
     }else {
-        if(req.body.username.match(/[^\w\d]/)){
-            res.send("user already in database");
-        }else if(req.body.password.match(/[^\w\d]/)){
-            res.send("user already in database");
-        }else if(req.body.email.match(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)){
-            res.send("user already in database");
-        }else {
-            User.findOne({username : req.body.username }, function(err, user){
-                if (err) throw err;
-        
-                if (user == null){
-                    var newUser = new User({username: req.body.username,
-                        password: req.body.password,
-                        email: req.body.email,
-                        sessions: [],
-                        friends: [],
-                        boops: [],
-                        content: [],
-                    });
-                    newUser.save(function(err, newUser){
-                        if (err) return console.error(err);
-                    });
-                    res.send("user registered")
-                        //});
-                }
-                else{
-                    res.send("user already in database");
-                }
-            })
-        }
+        User.findOne({username : req.body.username }, function(err, user){
+            if (err) throw err;
+    
+            if (user == null){
+                var newUser = new User({username: req.body.username,
+                    password: req.body.password,
+                    email: req.body.email,
+                    sessions: [],
+                    friends: [],
+                    boops: [],
+                    content: [],
+                });
+                newUser.save(function(err, newUser){
+                    if (err) return console.error(err);
+                });
+                res.send("user registered")
+                    //});
+            }
+            else{
+                res.send("user already in database");
+            }
+        })
     }
 });
 
@@ -327,7 +319,6 @@ app.get('/cleardatabase', function(req, res){
     //temporary path used for testing, remove this when not running in dev mode
     User.deleteMany({}, function(err) { 
     });
-    console.log("cleared database")
 
     res.status(200).send("Cleared database");
 });
