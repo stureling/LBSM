@@ -123,6 +123,7 @@ class FrontEndTests(unittest.TestCase):
         assert browser.current_url == 'http://localhost:8080/#/login'
         assert 'Wrong username or password! Please try again' in browser.page_source
 
+        ############################################################################
         username_box = browser.find_element_by_id('input-1')
         password_box = browser.find_element_by_id('input-2')
 
@@ -179,7 +180,6 @@ class FrontEndTests(unittest.TestCase):
         add_friend_btn = browser.find_element_by_id('accept-req-btn')
         add_friend_btn.click()
 
-    """
     def test_006_post_on_friends_wall(self):
         browser = self.browser
 
@@ -198,8 +198,24 @@ class FrontEndTests(unittest.TestCase):
         
         login_button = browser.find_element_by_id('login-button')
         login_button.click()
-    """
+    
+        # Check if anna is added to friendslist
+        friend_link = browser.find_element_by_class_name('friend-link')
+        assert 'anna' == friend_link.text
 
+        # Now go to annas wall and post something
+        friend_link.click()
+        text_area = browser.find_element_by_id('text-area')
+        message = 'HEJ ANNA!!!!!!!!'
+        text_area.send_keys(message)
+
+        post_button = browser.find_element_by_id('post-button')
+        post_button.click()
+
+        # Check if the message has been posted
+        assert message in browser.page_source
+
+    
     def test_999_logout(self):
         browser = self.browser
         logout_link = browser.find_element_by_id('logout-link')

@@ -2,7 +2,7 @@
     <div id="post-area">
         <b-form @submit="onSubmit">   
             <b-form-textarea
-                id="textarea"
+                id="text-area"
                 v-model="text"
                 placeholder="What's happening?"
                 rows="3"
@@ -11,9 +11,8 @@
             ></b-form-textarea>
             <span>
                 <b-button :disabled="toDisable" id="post-button" type="submit" variant="primary">Post</b-button>
-                <pre id="counter"> Char count: {{decrementCharCount}}</pre>
+                <pre id="counter">Char count: {{decrementCharCount}}</pre>
             </span>
-
         </b-form>
     </div>
 </template>

@@ -14,7 +14,7 @@
                 <PostListComponent v-bind:newPost="newPost" v-bind:username="username"/> 
             </div>
         </div>
-        <div id="friend-lists">
+        <div id="friend-list-area">
             <FriendsListComponent  v-bind:username="username" />
             <FriendReqListComponent  />
         </div>
@@ -84,7 +84,7 @@ export default {
     color:yellow;
     text-shadow: 2px 2px black;
 }
-#friend-lists {
+#friend-list-area {
     background-color: teal;
     border: 0px;
     padding: 0.5%;

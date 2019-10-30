@@ -1,8 +1,6 @@
 <template>
     <div>
-        <h1 id="title">
-                Welcome to lbsm!
-        </h1>
+        <h1 id="title">Welcome to LBSM!</h1>
         <div id="login">
         <b-form @submit="onSubmit" v-if="show">
             <h1 id="login-label">Login</h1>
@@ -28,7 +26,7 @@
             </b-form-group>
  
             <div>       
-                <p v-if="failure" id="error">Wrong username or password! Please try again</p>
+                <h4 v-if="failure" id="error">Wrong username or password! Please try again</h4>
                 <b-button id="login-button" type="submit" variant="primary">Login</b-button>
             
                 <p id="non-user">Not a user? 

@@ -8,15 +8,15 @@
 
         <b-collapse id="nav-collapse" is-nav>
             
-            <b-navbar-item href="/#/users">
+            <b-nav-item href="/#/users">
                 <router-link id="friends-list-link" class="navbar-link" style="color: white" to="/users"> Find friends</router-link>
-            </b-navbar-item>
+            </b-nav-item>
             <!-- Right aligned nav items -->
             <b-navbar-nav class="ml-auto">
             
-            <b-navbar-item  href="/#/login" v-on:click.native="logOut()">
+            <b-nav-item  href="/#/login" v-on:click.native="logOut()">
                 <router-link id="logout-link" class="navbar-link" to="/login" v-on:click.native="logOut()" replace>Logout</router-link>
-            </b-navbar-item>
+            </b-nav-item>
 
             </b-navbar-nav>
         </b-collapse>
@@ -53,14 +53,18 @@ export default {
 </script>
 
 <style>
-#nav-bar{
+#nav-bar {
     background-color: teal;
     text-shadow: 2px 2px black;
 }
-.navbar-link{
-    color: white;
-}
-#brand{
+#brand {
     margin-left: 0.45%;
+}
+.nav-item {
+    list-style-type: none; 
+	padding: 0px;
+}
+.navbar-link {
+    color: white;
 }
 </style>

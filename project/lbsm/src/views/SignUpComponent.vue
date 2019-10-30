@@ -52,7 +52,6 @@
                     ></b-form-input>
                 </b-form-group>
 
-                
                 <div>        
                     <h4 v-if="inDataBase" id="error">Username already taken</h4>
                     <b-button id="sign-up-button" type="submit" variant="primary">Sign-up</b-button>
